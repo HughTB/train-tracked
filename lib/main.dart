@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 
-// Nav bar to show at the bottom of all screens
-const List<BottomNavigationBarItem> navBarItems = <BottomNavigationBarItem>[
-  BottomNavigationBarItem(
+// Settings toggle variables
+bool _platformNotif = false;
+bool _delayNotif = false;
+bool _cancellationNotif = false;
+
+const List<DropdownMenuEntry> homeStationEntries = <DropdownMenuEntry>[
+  DropdownMenuEntry(
+    value: 'SOU',
+    label: 'Southampton Central (SOU)',
+  ),
+  DropdownMenuEntry(
+    value: 'SOA',
+    label: 'Southampton Airport Parkway (SOA)',
+  ),
+  DropdownMenuEntry(
+    value: 'PMS',
+    label: 'Portsmouth & Southsea (PMS)',
+  ),
+];
+
+// Nav bar items to show at the bottom of all screens
+const List<NavigationDestination> navBarItems = <NavigationDestination>[
+  NavigationDestination(
     icon: Icon(Icons.home_outlined),
-    activeIcon: Icon(Icons.home),
+    selectedIcon: Icon(Icons.home),
     label: 'Home',
   ),
-  BottomNavigationBarItem(
+  NavigationDestination(
     icon: Icon(Icons.train_outlined),
-    activeIcon: Icon(Icons.train),
+    selectedIcon: Icon(Icons.train),
     label: 'Live Trains',
   ),
-  BottomNavigationBarItem(
+  NavigationDestination(
     icon: Icon(Icons.settings_outlined),
-    activeIcon: Icon(Icons.settings),
+    selectedIcon: Icon(Icons.settings),
     label: 'Settings',
   ),
 ];
@@ -94,14 +114,15 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: navBarItems,
-        currentIndex: currentNavIndex,
-        onTap: (int index) {
+      bottomNavigationBar: NavigationBar(
+        destinations: navBarItems,
+        selectedIndex: currentNavIndex,
+        indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+        onDestinationSelected: (int index) {
           if (index != currentNavIndex) {
             Navigator.pushReplacementNamed(context, getNavRoute(index));
           }
-        },
+        }
       ),
     );
   }
@@ -135,14 +156,15 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: navBarItems,
-        currentIndex: currentNavIndex,
-        onTap: (int index) {
-          if (index != currentNavIndex) {
-            Navigator.pushReplacementNamed(context, getNavRoute(index));
+      bottomNavigationBar: NavigationBar(
+          destinations: navBarItems,
+          selectedIndex: currentNavIndex,
+          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+          onDestinationSelected: (int index) {
+            if (index != currentNavIndex) {
+              Navigator.pushReplacementNamed(context, getNavRoute(index));
+            }
           }
-        },
       ),
     );
   }
@@ -166,24 +188,61 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
           children: [
+            const DropdownMenu(
+              label: Text('Home Station'),
+              dropdownMenuEntries: homeStationEntries,
+            ),
+            const Divider(),
             Text(
-              'Settings',
+              'Notifications',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            SwitchListTile(
+              title: const Text('Platform Change'),
+              subtitle: const Text('Send a notification if a saved train changes platform'),
+              value: _platformNotif,
+              onChanged: (bool value) {
+                setState(() {
+                  _platformNotif = value;
+                });
+              }
+            ),
+            SwitchListTile(
+                title: const Text('Train Delay'),
+                subtitle: const Text('Send a notification if a saved train is delayed by more than 5 minutes'),
+                value: _delayNotif,
+                onChanged: (bool value) {
+                  setState(() {
+                    _delayNotif = value;
+                  });
+                }
+            ),
+            SwitchListTile(
+                title: const Text('Train Cancellation'),
+                subtitle: const Text('Send a notification if a saved train is cancelled'),
+                value: _cancellationNotif,
+                onChanged: (bool value) {
+                  setState(() {
+                    _cancellationNotif = value;
+                  });
+                }
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: navBarItems,
-        currentIndex: currentNavIndex,
-        onTap: (int index) {
-          if (index != currentNavIndex) {
-            Navigator.pushReplacementNamed(context, getNavRoute(index));
+      bottomNavigationBar: NavigationBar(
+          destinations: navBarItems,
+          selectedIndex: currentNavIndex,
+          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+          onDestinationSelected: (int index) {
+            if (index != currentNavIndex) {
+              Navigator.pushReplacementNamed(context, getNavRoute(index));
+            }
           }
-        },
       ),
     );
   }
