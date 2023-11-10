@@ -11,11 +11,7 @@ bool _cancellationNotif = false;
 int _themeMode = 0;
 String? _homeStation;
 
-const List<DropdownMenuEntry> homeStationEntries = <DropdownMenuEntry>[
-  DropdownMenuEntry(value: 'SOU', label: 'Southampton Central (SOU)'),
-  DropdownMenuEntry(value: 'SOA', label: 'Southampton Airport Parkway (SOA)'),
-  DropdownMenuEntry(value: 'PMS', label: 'Portsmouth & Southsea (PMS)'),
-];
+late final List<DropdownMenuEntry> homeStationEntries;
 
 const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
   DropdownMenuEntry(value: 0, label: 'Follow System Theme'),
@@ -70,7 +66,8 @@ Future<void> main() async {
   _themeMode = preferences.getInt('pref-theme-mode') ?? 0;
   _homeStation = preferences.getString('pref-home-station');
 
-  print(await getStationList());
+  List<Station> stations = await getStationList();
+  homeStationEntries = getStationsDropdownList(stations);
 
   runApp(MyApp());
 }
