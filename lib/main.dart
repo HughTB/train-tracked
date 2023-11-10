@@ -1,23 +1,26 @@
-import 'package:flutter/material.dart';
+import 'stations.dart';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+late final SharedPreferences preferences;
 // Settings toggle variables
 bool _platformNotif = false;
 bool _delayNotif = false;
 bool _cancellationNotif = false;
+int _themeMode = 0;
+String? _homeStation;
 
 const List<DropdownMenuEntry> homeStationEntries = <DropdownMenuEntry>[
-  DropdownMenuEntry(
-    value: 'SOU',
-    label: 'Southampton Central (SOU)',
-  ),
-  DropdownMenuEntry(
-    value: 'SOA',
-    label: 'Southampton Airport Parkway (SOA)',
-  ),
-  DropdownMenuEntry(
-    value: 'PMS',
-    label: 'Portsmouth & Southsea (PMS)',
-  ),
+  DropdownMenuEntry(value: 'SOU', label: 'Southampton Central (SOU)'),
+  DropdownMenuEntry(value: 'SOA', label: 'Southampton Airport Parkway (SOA)'),
+  DropdownMenuEntry(value: 'PMS', label: 'Portsmouth & Southsea (PMS)'),
+];
+
+const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
+  DropdownMenuEntry(value: 0, label: 'Follow System Theme'),
+  DropdownMenuEntry(value: 1, label: 'Light Mode'),
+  DropdownMenuEntry(value: 2, label: 'Dark Mode'),
 ];
 
 // Nav bar items to show at the bottom of all screens
@@ -57,12 +60,25 @@ String getNavRoute(int index) {
   }
 }
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  preferences = await SharedPreferences.getInstance();
+  _platformNotif = preferences.getBool('notif-platform-change') ?? false;
+  _delayNotif = preferences.getBool('notif-train-delay') ?? false;
+  _cancellationNotif = preferences.getBool('notif-train-cancel') ?? false;
+  _themeMode = preferences.getInt('pref-theme-mode') ?? 0;
+  _homeStation = preferences.getString('pref-home-station');
+
+  print(await getStationList());
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final themeMode = (_themeMode == 0) ? ThemeMode.system : (_themeMode == 1) ? ThemeMode.light : ThemeMode.dark;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +92,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8635E3), brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system, // Follow system theme
+      themeMode: themeMode, // Follow system theme
       home: const HomePage(title: 'Home'),
       routes: <String, WidgetBuilder>{
         "/live-trains": (context) => const LiveTrainsPage(title: 'Live Trains'),
@@ -146,12 +162,13 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
           children: [
-            Text(
-              'Live Trains',
+            SearchBar(
+              padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
+              leading: const Icon(Icons.search),
             ),
           ],
         ),
@@ -181,6 +198,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,9 +210,46 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: [
-            const DropdownMenu(
-              label: Text('Home Station'),
-              dropdownMenuEntries: homeStationEntries,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                'General',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return DropdownMenu(
+                  label: const Text('App Theme'),
+                  dropdownMenuEntries: themeModeEntries,
+                  width: constraints.maxWidth,
+                  initialSelection: _themeMode,
+                  onSelected: (dynamic value) {
+                    setState(() {
+                      _themeMode = value;
+                      preferences.setInt('pref-theme-mode', value);
+                    });
+                  },
+                );
+              },
+            ),
+            const Text('(Applied on app restart)'),
+            Divider(color: Theme.of(context).canvasColor),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return DropdownMenu(
+                  label: const Text('Home Station'),
+                  dropdownMenuEntries: homeStationEntries,
+                  width: constraints.maxWidth,
+                  initialSelection: _homeStation,
+                  onSelected: (dynamic value) {
+                    setState(() {
+                      _homeStation = value;
+                      preferences.setString('pref-home-station', value);
+                    });
+                  },
+                );
+              },
             ),
             const Divider(),
             Text(
@@ -208,6 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (bool value) {
                 setState(() {
                   _platformNotif = value;
+                  preferences.setBool('notif-platform-change', value);
                 });
               }
             ),
@@ -218,6 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (bool value) {
                   setState(() {
                     _delayNotif = value;
+                    preferences.setBool('notif-train-delay', value);
                   });
                 }
             ),
@@ -228,6 +285,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (bool value) {
                   setState(() {
                     _cancellationNotif = value;
+                    preferences.setBool('notif-train-cancel', value);
                   });
                 }
             ),
