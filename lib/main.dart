@@ -1,4 +1,5 @@
 import 'stations.dart';
+import 'stations_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +11,9 @@ bool _delayNotif = false;
 bool _cancellationNotif = false;
 int _themeMode = 0;
 String? _homeStation;
+String? _stationSearchTerm;
 
+late final List<Station> _stations;
 late final List<DropdownMenuEntry> homeStationEntries;
 
 const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
@@ -66,8 +69,8 @@ Future<void> main() async {
   _themeMode = preferences.getInt('pref-theme-mode') ?? 0;
   _homeStation = preferences.getString('pref-home-station');
 
-  List<Station> stations = await getStationList();
-  homeStationEntries = getStationsDropdownList(stations);
+  _stations = await getStationList();
+  homeStationEntries = getStationsDropdownList(_stations);
 
   runApp(MyApp());
 }
@@ -166,6 +169,14 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
             SearchBar(
               padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
               leading: const Icon(Icons.search),
+              onChanged: (String? value) {
+                setState(() {
+                  _stationSearchTerm = value;
+                });
+              },
+            ),
+            Column(
+              children: updateStationsSearch(_stations, _stationSearchTerm),
             ),
           ],
         ),
