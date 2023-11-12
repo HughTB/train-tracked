@@ -1,19 +1,22 @@
-import 'stations.dart';
-import 'stations_search.dart';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'stations.dart';
+
+// Import pages from other files
+import 'live_trains_page.dart';
+import 'settings_page.dart';
+
 late final SharedPreferences preferences;
 // Settings toggle variables
-bool _platformNotif = false;
-bool _delayNotif = false;
-bool _cancellationNotif = false;
-int _themeMode = 0;
-String? _homeStation;
-String? _stationSearchTerm;
+bool prefPlatformNotif = false;
+bool prefDelayNotif = false;
+bool prefCancellationNotif = false;
+int prefThemeMode = 0;
+String? prefHomeStation;
+String? stationSearchTerm;
 
-late final List<Station> _stations;
+late final List<Station> stations;
 late final List<DropdownMenuEntry> homeStationEntries;
 
 const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
@@ -63,14 +66,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   preferences = await SharedPreferences.getInstance();
-  _platformNotif = preferences.getBool('notif-platform-change') ?? false;
-  _delayNotif = preferences.getBool('notif-train-delay') ?? false;
-  _cancellationNotif = preferences.getBool('notif-train-cancel') ?? false;
-  _themeMode = preferences.getInt('pref-theme-mode') ?? 0;
-  _homeStation = preferences.getString('pref-home-station');
+  prefPlatformNotif = preferences.getBool('notif-platform-change') ?? false;
+  prefDelayNotif = preferences.getBool('notif-train-delay') ?? false;
+  prefCancellationNotif = preferences.getBool('notif-train-cancel') ?? false;
+  prefThemeMode = preferences.getInt('pref-theme-mode') ?? 0;
+  prefHomeStation = preferences.getString('pref-home-station');
 
-  _stations = await getStationList();
-  homeStationEntries = getStationsDropdownList(_stations);
+  stations = await getStationList();
+  homeStationEntries = getStationsDropdownList(stations);
 
   runApp(MyApp());
 }
@@ -78,7 +81,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final themeMode = (_themeMode == 0) ? ThemeMode.system : (_themeMode == 1) ? ThemeMode.light : ThemeMode.dark;
+  final themeMode = (prefThemeMode == 0) ? ThemeMode.system : (prefThemeMode == 1) ? ThemeMode.light : ThemeMode.dark;
 
   @override
   Widget build(BuildContext context) {
@@ -139,176 +142,6 @@ class _HomePageState extends State<HomePage> {
             Navigator.pushReplacementNamed(context, getNavRoute(index));
           }
         }
-      ),
-    );
-  }
-}
-
-// Live Trains page
-class LiveTrainsPage extends StatefulWidget {
-  const LiveTrainsPage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<LiveTrainsPage> createState() => _LiveTrainsPageState();
-}
-
-class _LiveTrainsPageState extends State<LiveTrainsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            SearchBar(
-              padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
-              leading: const Icon(Icons.search),
-              onChanged: (String? value) {
-                setState(() {
-                  _stationSearchTerm = value;
-                });
-              },
-            ),
-            Column(
-              children: updateStationsSearch(_stations, _stationSearchTerm),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-          destinations: navBarItems,
-          selectedIndex: currentNavIndex,
-          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
-          onDestinationSelected: (int index) {
-            if (index != currentNavIndex) {
-              Navigator.pushReplacementNamed(context, getNavRoute(index));
-            }
-          }
-      ),
-    );
-  }
-}
-
-// Settings page
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Text(
-                'General',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return DropdownMenu(
-                  label: const Text('App Theme'),
-                  dropdownMenuEntries: themeModeEntries,
-                  width: constraints.maxWidth,
-                  initialSelection: _themeMode,
-                  onSelected: (dynamic value) {
-                    setState(() {
-                      _themeMode = value;
-                      preferences.setInt('pref-theme-mode', value);
-                    });
-                  },
-                );
-              },
-            ),
-            const Text('(Applied on app restart)'),
-            Divider(color: Theme.of(context).canvasColor),
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return DropdownMenu(
-                  label: const Text('Home Station'),
-                  dropdownMenuEntries: homeStationEntries,
-                  width: constraints.maxWidth,
-                  initialSelection: _homeStation,
-                  onSelected: (dynamic value) {
-                    setState(() {
-                      _homeStation = value;
-                      preferences.setString('pref-home-station', value);
-                    });
-                  },
-                );
-              },
-            ),
-            const Divider(),
-            Text(
-              'Notifications',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            SwitchListTile(
-              title: const Text('Platform Change'),
-              subtitle: const Text('Send a notification if a saved train changes platform'),
-              value: _platformNotif,
-              onChanged: (bool value) {
-                setState(() {
-                  _platformNotif = value;
-                  preferences.setBool('notif-platform-change', value);
-                });
-              }
-            ),
-            SwitchListTile(
-                title: const Text('Train Delay'),
-                subtitle: const Text('Send a notification if a saved train is delayed by more than 5 minutes'),
-                value: _delayNotif,
-                onChanged: (bool value) {
-                  setState(() {
-                    _delayNotif = value;
-                    preferences.setBool('notif-train-delay', value);
-                  });
-                }
-            ),
-            SwitchListTile(
-                title: const Text('Train Cancellation'),
-                subtitle: const Text('Send a notification if a saved train is cancelled'),
-                value: _cancellationNotif,
-                onChanged: (bool value) {
-                  setState(() {
-                    _cancellationNotif = value;
-                    preferences.setBool('notif-train-cancel', value);
-                  });
-                }
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-          destinations: navBarItems,
-          selectedIndex: currentNavIndex,
-          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
-          onDestinationSelected: (int index) {
-            if (index != currentNavIndex) {
-              Navigator.pushReplacementNamed(context, getNavRoute(index));
-            }
-          }
       ),
     );
   }
