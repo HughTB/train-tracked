@@ -1,7 +1,7 @@
-import 'package:train_tracked/stations.dart';
-import 'package:train_tracked/main.dart';
-
 import 'package:flutter/material.dart';
+
+import 'main.dart';
+import 'stations.dart';
 
 List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, BuildContext context, Color textColour) {
   List<Widget> tiles = [];
