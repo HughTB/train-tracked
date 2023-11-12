@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 
+const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
+  DropdownMenuEntry(value: 0, label: 'Follow System Theme'),
+  DropdownMenuEntry(value: 1, label: 'Light Mode'),
+  DropdownMenuEntry(value: 2, label: 'Dark Mode'),
+];
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.title});
 

@@ -22,22 +22,25 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: ListView(
+        child: Stack(
           children: [
-            SearchBar(
-              padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
-              leading: const Icon(Icons.search),
-              onChanged: (String? value) {
-                setState(() {
-                  stationSearchTerm = value;
-                });
-              },
+            ListView(
+              children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
             ),
-            Column(
-              children: updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
+            Align(
+              alignment: Alignment.topCenter,
+              child: SearchBar(
+                padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
+                leading: const Icon(Icons.search),
+                onChanged: (String? value) {
+                  setState(() {
+                    stationSearchTerm = value;
+                  });
+                },
+              ),
             ),
           ],
-        ),
+        )
       ),
       bottomNavigationBar: NavigationBar(
           destinations: navBarItems,

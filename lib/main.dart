@@ -8,8 +8,8 @@ import 'home_page.dart';
 import 'live_trains_page.dart';
 import 'settings_page.dart';
 
-late final SharedPreferences preferences;
 // Settings toggle variables
+late final SharedPreferences preferences;
 bool prefPlatformNotif = false;
 bool prefDelayNotif = false;
 bool prefCancellationNotif = false;
@@ -17,14 +17,9 @@ int prefThemeMode = 0;
 String? prefHomeStation;
 String? stationSearchTerm;
 
+// Stations loaded from assets/stations.csv
 late final List<Station> stations;
 late final List<DropdownMenuEntry> homeStationEntries;
-
-const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
-  DropdownMenuEntry(value: 0, label: 'Follow System Theme'),
-  DropdownMenuEntry(value: 1, label: 'Light Mode'),
-  DropdownMenuEntry(value: 2, label: 'Dark Mode'),
-];
 
 // Nav bar items to show at the bottom of all screens
 const List<NavigationDestination> navBarItems = <NavigationDestination>[
