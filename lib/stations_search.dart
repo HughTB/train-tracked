@@ -23,7 +23,7 @@ List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Bu
       if (station.crs!.toLowerCase().contains(searchTerm)) {
         foundStations++;
 
-        results.add(_getStationWidget(station, context, textColour));
+        results.add(getStationWidget(station, context));
 
         tempStations.remove(station);
       }
@@ -36,14 +36,26 @@ List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Bu
     if (station.stationName!.toLowerCase().contains(searchTerm)) {
       foundStations++;
 
-      results.add(_getStationWidget(station, context, textColour));
+      results.add(getStationWidget(station, context));
     }
   }
 
   return results;
 }
 
-Widget _getStationWidget(Station station, BuildContext context, Color textColour) {
+Station? getStationByCrs(List<Station> stations, String? crs) {
+  if (crs == null) {
+    return null;
+  }
+
+  for (Station station in stations) {
+    if (station.crs == crs.toUpperCase()) return station;
+  }
+
+  return null;
+}
+
+Widget getStationWidget(Station station, BuildContext context) {
   return ListTile(
     title: TextButton(
       child: Align(
@@ -51,7 +63,7 @@ Widget _getStationWidget(Station station, BuildContext context, Color textColour
         child: Text(
           "${station.stationName} (${station.crs})",
           style: TextStyle(
-            color: textColour,
+            color: Theme.of(context).colorScheme.inverseSurface,
             fontSize: 18.0,
           ),
         ),
