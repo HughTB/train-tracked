@@ -20,15 +20,15 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Stack(
-          children: [
-            ListView(
-              children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
+      body: Stack(
+        children: [
+          ListView(
+            children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
               child: SearchBar(
                 padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
                 leading: const Icon(Icons.search),
@@ -38,9 +38,9 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
                   });
                 },
               ),
-            ),
-          ],
-        )
+            )
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
           destinations: navBarItems,

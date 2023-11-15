@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'stations.dart';
+import 'stations_search.dart';
 
 // Import pages from other files
 import 'home_page.dart';
@@ -16,6 +17,7 @@ bool prefCancellationNotif = false;
 int prefThemeMode = 0;
 String? prefHomeStation;
 String? stationSearchTerm;
+Map<String, Station?> savedStations = {};
 
 // Stations loaded from assets/stations.csv
 late final List<Station> stations;
@@ -70,6 +72,8 @@ Future<void> main() async {
 
   stations = await getStationList();
   homeStationEntries = getStationsDropdownList(stations);
+
+  savedStations["home"] = getStationByCrs(stations, prefHomeStation);
 
   runApp(MyApp());
 }
