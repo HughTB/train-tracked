@@ -79,3 +79,19 @@ Widget getStationWidget(Station station, BuildContext context) {
     ),
   );
 }
+
+List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, BuildContext context) {
+  List<Widget> widgets = [];
+
+  if (home != null) {
+    widgets.add(getStationWidget(home, context));
+  }
+
+  for (Station? station in stations) {
+    if (station != home && station != null) {
+      widgets.add(getStationWidget(station, context));
+    }
+  }
+
+  return widgets;
+}

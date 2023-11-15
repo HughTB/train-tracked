@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: ListView(
-            children: [
+            children: <Widget>[
               DecoratedBox(
                 decoration: const BoxDecoration(
                   color: Colors.amber,
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-              if (prefHomeStation != null) getStationWidget(getStationByCrs(stations, prefHomeStation)!, context),
+            ] + getSavedStationsWidgets(savedStations['home'], savedStations.values.toList(), context) + [
               const Divider(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
