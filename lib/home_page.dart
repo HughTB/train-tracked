@@ -25,24 +25,21 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              SizedBox(
-                height: 120,
-                child: DecoratedBox(
-                  decoration: const BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      'Warning: This app does not use live data! It uses a snapshot of data from 16/11/2023',
-                      style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-                        color: Colors.black,
-                      ),
+              DecoratedBox(
+                decoration: const BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    'Warning: This app does not use live data! It is currently using a snapshot of data from 16/11/2023',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                      color: Colors.black,
                     ),
-                  )
-                )
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
