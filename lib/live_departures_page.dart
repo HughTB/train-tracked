@@ -56,6 +56,7 @@ class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
           indicatorColor: Theme.of(context).colorScheme.inversePrimary,
           onDestinationSelected: (int index) {
             if (index != currentNavIndex) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
               Navigator.pushReplacementNamed(context, getNavRoute(index));
             }
           }

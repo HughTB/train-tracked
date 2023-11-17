@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    'Warning: This app does not use live data! It is currently using a snapshot of data from 16/11/2023',
+                    'Warning: This app does not use live data! It is currently using a snapshot of data from 18/11/2023',
                     style: TextStyle(
                       fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
                       color: Colors.black,
@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> {
           indicatorColor: Theme.of(context).colorScheme.inversePrimary,
           onDestinationSelected: (int index) {
             if (index != currentNavIndex) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
               Navigator.pushReplacementNamed(context, getNavRoute(index));
             }
           }
