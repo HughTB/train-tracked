@@ -27,10 +27,10 @@ class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
         title: Text(widget.title),
         actions: [
           IconButton(
-            icon: (savedStations.containsKey(crs)) ? const Icon(Icons.star) : const Icon(Icons.star_border),
+            icon: (savedStations.containsKey(crs) || savedStations["home"]?.crs == crs) ? const Icon(Icons.star) : const Icon(Icons.star_border),
             tooltip: 'Favourite Station',
             onPressed: () {
-              if (savedStations["home"]!.crs == crs) { return; }
+              if (savedStations["home"]?.crs == crs) { return; }
 
               setState(() {
                 if (savedStations.containsKey(crs)) {

@@ -62,9 +62,7 @@ Widget getStationWidget(Station station, BuildContext context) {
         alignment: Alignment.centerLeft,
         child: Text(
           "${station.stationName} (${station.crs})",
-          style: const TextStyle(
-            fontSize: 18.0,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
       onPressed: () {
