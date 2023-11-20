@@ -62,8 +62,7 @@ Widget getStationWidget(Station station, BuildContext context) {
         alignment: Alignment.centerLeft,
         child: Text(
           "${station.stationName} (${station.crs})",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.inverseSurface,
+          style: const TextStyle(
             fontSize: 18.0,
           ),
         ),

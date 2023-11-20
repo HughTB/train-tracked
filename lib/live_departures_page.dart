@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'stations_search.dart';
+import 'services.dart';
 
 class LiveDeparturesPage extends StatefulWidget {
   const LiveDeparturesPage({super.key, required this.title, required this.crs});
@@ -45,9 +46,7 @@ class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
-          children: const [
-            Text('lmao all the trains are cancelled 😢'),
-          ],
+          children: getLiveCards(getLiveDepartures(crs), context),
         ),
       ),
       bottomNavigationBar: NavigationBar(
