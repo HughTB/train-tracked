@@ -35,10 +35,13 @@ List<DropdownMenuEntry> getStationsDropdownList(List<Station> stations) {
   List<DropdownMenuEntry> dropdownEntries = [];
 
   for (Station station in stations) {
+    final value = station.crs;
+    final label = "${station.stationName} (${station.crs})";
+
     dropdownEntries.add(
       DropdownMenuEntry(
-          value: station.crs,
-          label: "${station.stationName!} (${station.crs})",
+          value: value,
+          label: label,
       )
     );
   }

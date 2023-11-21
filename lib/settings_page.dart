@@ -62,6 +62,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   dropdownMenuEntries: homeStationEntries,
                   width: constraints.maxWidth,
                   initialSelection: prefHomeStation,
+                  requestFocusOnTap: true,
+                  enableFilter: true,
+                  enableSearch: true,
+                  menuHeight: 200,
                   onSelected: (dynamic value) {
                     setState(() {
                       prefHomeStation = value;

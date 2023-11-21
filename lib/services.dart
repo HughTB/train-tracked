@@ -90,9 +90,9 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
                         ),
                       ),
                       Container(
-                        width: 2,
-                        height: 10,
-                        color: Colors.white,
+                        width: 1.5,
+                        height: 15,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                       Text.rich(
                         TextSpan(
