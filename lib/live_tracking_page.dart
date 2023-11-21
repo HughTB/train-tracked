@@ -36,8 +36,8 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: const [],
+        child: Column(
+          children: getServiceView(service),
         ),
       ),
       bottomNavigationBar: NavigationBar(

@@ -15,19 +15,20 @@ class Service {
   String? sta;
   String? eta;
   String? platform;
+  int? numCoaches;
 
-  Service(this.rid, this.destination, this.origin, this.std, this.etd, this.sta, this.eta, this.platform);
+  Service(this.rid, this.destination, this.origin, this.std, this.etd, this.sta, this.eta, this.platform, this.numCoaches);
 }
 
 List<Service> getLiveDepartures(String crs) {
   List<Service> services = [];
 
-  services.add(Service(10, "London Waterloo", "Bournemouth", "13:00", "On Time", "15:21", "On Time", "1"));
-  services.add(Service(11, "Portsmouth & Southsea", "Southampton Central", "13:44", "13:50", "14:38", "13:40", "3a"));
-  services.add(Service(12, "London Victoria", "Southampton Central", "14:02", "On Time", "16:30", "On Time", "2"));
-  services.add(Service(13, "Bournemouth", "Manchester Piccadilly", "14:10", "On Time", "15:03", "On Time", "4"));
-  services.add(Service(14, "Poole", "London Waterloo", "14:20", "On Time", "17:10", "On Time", "3b"));
-  services.add(Service(15, "Romsey", "Romsey", "14:24", "On Time", "14:54", "On Time", "2b"));
+  services.add(Service(10, "London Waterloo", "Bournemouth", "13:00", "On Time", "15:21", "On Time", "1", 12));
+  services.add(Service(11, "Portsmouth & Southsea", "Southampton Central", "13:44", "13:50", "14:38", "13:40", "3a", 4));
+  services.add(Service(12, "London Victoria", "Southampton Central", "14:02", "On Time", "16:30", "On Time", "2", 6));
+  services.add(Service(13, "Bournemouth", "Manchester Piccadilly", "14:10", "On Time", "15:03", "On Time", "4", 9));
+  services.add(Service(14, "Poole", "London Waterloo", "14:20", "On Time", "17:10", "On Time", "3b", 10));
+  services.add(Service(15, "Romsey", "Romsey", "14:24", "On Time", "14:54", "On Time", "2b", 2));
 
   return services;
 }
@@ -61,9 +62,18 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      "to ${service.destination}",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "to ${service.destination}",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          "${service.numCoaches} Coaches",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -144,4 +154,12 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
   }
 
   return cards;
+}
+
+List<Widget> getServiceView(Service service) {
+  List<Widget> widgets = [];
+
+
+
+  return widgets;
 }
