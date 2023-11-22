@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'main.dart';
+import 'stations_search.dart';
 
 const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
   DropdownMenuEntry(value: 0, label: 'Follow System Theme'),
@@ -70,6 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() {
                       prefHomeStation = value;
                       preferences.setString('pref-home-station', value);
+                      savedStations["home"] = getStationByCrs(stations, value);
                     });
                   },
                 );
