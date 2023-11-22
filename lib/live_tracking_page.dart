@@ -4,9 +4,8 @@ import 'main.dart';
 import 'services.dart';
 
 class LiveTrackingPage extends StatefulWidget {
-  const LiveTrackingPage({super.key, required this.title, required this.service});
+  const LiveTrackingPage({super.key, required this.service});
 
-  final String title;
   final Service service;
 
   @override
@@ -23,33 +22,33 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text("to ${service.destination.station?.stationName}"),
         actions: [
           IconButton(
-              icon: const Icon(Icons.save_outlined),
-              tooltip: 'Save Journey',
-              onPressed: () {
-                return;
-              }
+            icon: const Icon(Icons.save_outlined),
+            tooltip: 'Save Service',
+            onPressed: () {
+              return;
+            }
           )
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          children: getServiceView(service),
+        child: ListView(
+          children: getServiceView(context, service),
         ),
       ),
       bottomNavigationBar: NavigationBar(
-          destinations: navBarItems,
-          selectedIndex: currentNavIndex,
-          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
-          onDestinationSelected: (int index) {
-            if (index != currentNavIndex) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.pushReplacementNamed(context, getNavRoute(index));
-            }
+        destinations: navBarItems,
+        selectedIndex: currentNavIndex,
+        indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+        onDestinationSelected: (int index) {
+          if (index != currentNavIndex) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushReplacementNamed(context, getNavRoute(index));
           }
+        }
       ),
     );
   }
