@@ -3,39 +3,15 @@ import 'package:date_time_format/date_time_format.dart';
 
 import 'live_tracking_page.dart';
 import 'main.dart';
-import 'stations.dart';
+import 'service.dart';
+import 'station.dart';
 import 'stations_search.dart';
+import 'stopping_point.dart';
 
 const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
 const Color cancelledColour = Colors.red;
 
-class StoppingPoint {
-  String? platform;
-  DateTime? sta;
-  DateTime? eta;
-  DateTime? std;
-  DateTime? etd;
-  Station? station;
-  bool forecast;
-
-  StoppingPoint(this.platform, this.sta, this.eta, this.std, this.etd, this.station, this.forecast);
-}
-
-class Service {
-  int rid;
-  StoppingPoint origin;
-  StoppingPoint destination;
-  List<StoppingPoint> stoppingPoints;
-  int? numCoaches;
-  String? thisSta;
-  String? thisEta;
-  String? thisStd;
-  String? thisEtd;
-  String? thisPlatform;
-
-  Service(this.rid, this.origin, this.destination, this.stoppingPoints, this.thisSta, this.thisEta, this.thisStd, this.thisEtd, this.thisPlatform, this.numCoaches);
-}
 
 List<Service> getLiveDepartures(String crs) {
   List<Service> services = [];

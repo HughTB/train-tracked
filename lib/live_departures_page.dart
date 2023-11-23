@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'stations_search.dart';
-import 'services.dart';
+import 'services_search.dart';
 
 class LiveDeparturesPage extends StatefulWidget {
   const LiveDeparturesPage({super.key, required this.title, required this.crs});

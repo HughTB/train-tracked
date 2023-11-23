@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'stations.dart';
+import 'station.dart';
 import 'stations_search.dart';
 
 // Import pages from other files
