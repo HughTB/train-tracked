@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            ] + getSavedStationsWidgets(savedStations['home'], savedStations.values.toList(), context) + [
+            ] + getSavedStationsWidgets(savedStationsBox.get("home"), savedStationsBox.values.toList(), context) + [
               const Divider(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),

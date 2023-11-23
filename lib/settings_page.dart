@@ -44,11 +44,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   label: const Text('App Theme'),
                   dropdownMenuEntries: themeModeEntries,
                   width: constraints.maxWidth,
-                  initialSelection: prefThemeMode,
+                  initialSelection: preferencesBox.get("themeMode"),
                   onSelected: (dynamic value) {
                     setState(() {
-                      prefThemeMode = value;
-                      preferences.setInt('pref-theme-mode', value);
+                      preferencesBox.put("themeMode", value);
                     });
                   },
                 );
@@ -62,16 +61,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   label: const Text('Home Station'),
                   dropdownMenuEntries: homeStationEntries,
                   width: constraints.maxWidth,
-                  initialSelection: prefHomeStation,
+                  initialSelection: savedStationsBox.get("home")?.crs,
                   requestFocusOnTap: true,
                   enableFilter: true,
                   enableSearch: true,
                   menuHeight: 200,
                   onSelected: (dynamic value) {
                     setState(() {
-                      prefHomeStation = value;
-                      preferences.setString('pref-home-station', value);
-                      savedStations["home"] = getStationByCrs(stations, value);
+                      savedStationsBox.put("home", getStationByCrs(stations, value));
                     });
                   },
                 );
@@ -85,33 +82,30 @@ class _SettingsPageState extends State<SettingsPage> {
             SwitchListTile(
                 title: const Text('Platform Change'),
                 subtitle: const Text('Send a notification if a saved train changes platform'),
-                value: prefPlatformNotif,
+                value: preferencesBox.get("platformChangeNotif"),
                 onChanged: (bool value) {
                   setState(() {
-                    prefPlatformNotif = value;
-                    preferences.setBool('notif-platform-change', value);
+                    preferencesBox.put("platformChangeNotif", value);
                   });
                 }
             ),
             SwitchListTile(
                 title: const Text('Train Delay'),
                 subtitle: const Text('Send a notification if a saved train is delayed by more than 5 minutes'),
-                value: prefDelayNotif,
+                value: preferencesBox.get("delayNotif"),
                 onChanged: (bool value) {
                   setState(() {
-                    prefDelayNotif = value;
-                    preferences.setBool('notif-train-delay', value);
+                    preferencesBox.put("delayNotif", value);
                   });
                 }
             ),
             SwitchListTile(
                 title: const Text('Train Cancellation'),
                 subtitle: const Text('Send a notification if a saved train is cancelled'),
-                value: prefCancellationNotif,
+                value: preferencesBox.get("cancellationNotif"),
                 onChanged: (bool value) {
                   setState(() {
-                    prefCancellationNotif = value;
-                    preferences.setBool('notif-train-cancel', value);
+                    preferencesBox.put("cancellationNotif", value);
                   });
                 }
             ),

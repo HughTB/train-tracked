@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_flutter/adapters.dart';
 
+// Import classes for hive boxes
+import 'service.dart';
 import 'station.dart';
+import 'stopping_point.dart';
+
+// Import helper functions from other files
 import 'stations_search.dart';
 
 // Import pages from other files
@@ -11,15 +14,12 @@ import 'home_page.dart';
 import 'live_trains_page.dart';
 import 'settings_page.dart';
 
-// Settings toggle variables
-late final SharedPreferences preferences;
-bool prefPlatformNotif = false;
-bool prefDelayNotif = false;
-bool prefCancellationNotif = false;
-int prefThemeMode = 0;
-String? prefHomeStation;
+// Current LiveDeparturesPage search term
 String? stationSearchTerm;
-Map<String, Station?> savedStations = {};
+
+// Hive boxes
+late Box preferencesBox; // Preferences storage
+late Box<Station?> savedStationsBox; // Saved stations storage
 
 // Stations loaded from assets/stations.csv
 late final List<Station> stations;
@@ -46,6 +46,7 @@ const List<NavigationDestination> navBarItems = <NavigationDestination>[
 
 // The currently selected screen
 int currentNavIndex = 0;
+
 // Get the route to navigate to, given an index
 String getNavRoute(int index) {
   currentNavIndex = index; // Set the selected screen
@@ -65,17 +66,25 @@ String getNavRoute(int index) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  preferences = await SharedPreferences.getInstance();
-  prefPlatformNotif = preferences.getBool('notif-platform-change') ?? false;
-  prefDelayNotif = preferences.getBool('notif-train-delay') ?? false;
-  prefCancellationNotif = preferences.getBool('notif-train-cancel') ?? false;
-  prefThemeMode = preferences.getInt('pref-theme-mode') ?? 0;
-  prefHomeStation = preferences.getString('pref-home-station');
+  await Hive.initFlutter();
+  Hive.registerAdapter(StationAdapter());
+  Hive.registerAdapter(StoppingPointAdapter());
+  Hive.registerAdapter(ServiceAdapter());
 
+  // Get hive boxes
+  preferencesBox = await Hive.openBox('preferences');
+  savedStationsBox = await Hive.openBox<Station?>('savedStations');
+
+  // Ensure that all settings are set to default if not found (should only be needed on first load, but better safe than sorry!)
+  preferencesBox.put("platformChangeNotif", preferencesBox.get("platformChangeNotif") ?? false); // If value does not exist, set to false, etc
+  preferencesBox.put("delayNotif", preferencesBox.get("delayNotif") ?? false);
+  preferencesBox.put("cancellationNotif", preferencesBox.get("cancellationNotif") ?? false);
+  preferencesBox.put("themeMode", preferencesBox.get("themeMode") ?? 0);
+
+  // Get the list of stations from assets/stations.csv
   stations = await getStationList();
+  // Build the list of entries for the dropdown list on the settings page
   homeStationEntries = getStationsDropdownList(stations);
-
-  savedStations["home"] = getStationByCrs(stations, prefHomeStation);
 
   runApp(MyApp());
 }
@@ -83,7 +92,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final themeMode = (prefThemeMode == 0) ? ThemeMode.system : (prefThemeMode == 1) ? ThemeMode.light : ThemeMode.dark;
+  final themeMode = (preferencesBox.get("themeMode") == 0) ? ThemeMode.system : (preferencesBox.get("themeMode") == 1) ? ThemeMode.light : ThemeMode.dark;
 
   @override
   Widget build(BuildContext context) {
