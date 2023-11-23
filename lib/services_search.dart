@@ -4,7 +4,6 @@ import 'package:date_time_format/date_time_format.dart';
 import 'live_tracking_page.dart';
 import 'main.dart';
 import 'service.dart';
-import 'station.dart';
 import 'stations_search.dart';
 import 'stopping_point.dart';
 
@@ -12,13 +11,9 @@ const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
 const Color cancelledColour = Colors.red;
 
-
-List<Service> getLiveDepartures(String crs) {
-  List<Service> services = [];
-
-  // Temp services for testing
-  services.add(Service(
-    20231122001,
+List<Service> tempServices = [
+  Service(
+    "20231122001",
     StoppingPoint(
       "3",
       null,
@@ -66,94 +61,94 @@ List<Service> getLiveDepartures(String crs) {
         false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T15:34:00"),
-          DateTime.tryParse("2023-11-22T15:34:00"),
-          DateTime.tryParse("2023-11-22T15:35:00"),
-          DateTime.tryParse("2023-11-22T15:35:00"),
-          getStationByCrs(stations, "HAM"),
-          false
+        "1",
+        DateTime.tryParse("2023-11-22T15:34:00"),
+        DateTime.tryParse("2023-11-22T15:34:00"),
+        DateTime.tryParse("2023-11-22T15:35:00"),
+        DateTime.tryParse("2023-11-22T15:35:00"),
+        getStationByCrs(stations, "HAM"),
+        false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T15:39:00"),
-          DateTime.tryParse("2023-11-22T15:39:00"),
-          DateTime.tryParse("2023-11-22T15:40:00"),
-          DateTime.tryParse("2023-11-22T15:40:00"),
-          getStationByCrs(stations, "POO"),
-          false
+        "1",
+        DateTime.tryParse("2023-11-22T15:39:00"),
+        DateTime.tryParse("2023-11-22T15:39:00"),
+        DateTime.tryParse("2023-11-22T15:40:00"),
+        DateTime.tryParse("2023-11-22T15:40:00"),
+        getStationByCrs(stations, "POO"),
+        false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T15:44:00"),
-          DateTime.tryParse("2023-11-22T15:44:00"),
-          DateTime.tryParse("2023-11-22T15:44:00"),
-          DateTime.tryParse("2023-11-22T15:44:00"),
-          getStationByCrs(stations, "PKS"),
-          false
+        "1",
+        DateTime.tryParse("2023-11-22T15:44:00"),
+        DateTime.tryParse("2023-11-22T15:44:00"),
+        DateTime.tryParse("2023-11-22T15:44:00"),
+        DateTime.tryParse("2023-11-22T15:44:00"),
+        getStationByCrs(stations, "PKS"),
+        false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T15:48:00"),
-          DateTime.tryParse("2023-11-22T15:48:00"),
-          DateTime.tryParse("2023-11-22T15:48:00"),
-          DateTime.tryParse("2023-11-22T15:48:00"),
-          getStationByCrs(stations, "BSM"),
-          false
+        "1",
+        DateTime.tryParse("2023-11-22T15:48:00"),
+        DateTime.tryParse("2023-11-22T15:48:00"),
+        DateTime.tryParse("2023-11-22T15:48:00"),
+        DateTime.tryParse("2023-11-22T15:48:00"),
+        getStationByCrs(stations, "BSM"),
+        false
       ),
       StoppingPoint(
-          "2",
-          DateTime.tryParse("2023-11-22T15:54:00"),
-          DateTime.tryParse("2023-11-22T15:54:00"),
-          DateTime.tryParse("2023-11-22T15:59:00"),
-          DateTime.tryParse("2023-11-22T15:59:00"),
-          getStationByCrs(stations, "BMH"),
-          false
+        "2",
+        DateTime.tryParse("2023-11-22T15:54:00"),
+        DateTime.tryParse("2023-11-22T15:54:00"),
+        DateTime.tryParse("2023-11-22T15:59:00"),
+        DateTime.tryParse("2023-11-22T15:59:00"),
+        getStationByCrs(stations, "BMH"),
+        false
       ),
       StoppingPoint(
-          "2",
-          DateTime.tryParse("2023-11-22T16:13:00"),
-          DateTime.tryParse("2023-11-22T16:13:00"),
-          DateTime.tryParse("2023-11-22T16:14:00"),
-          DateTime.tryParse("2023-11-22T16:14:00"),
-          getStationByCrs(stations, "BCU"),
-          false
+        "2",
+        DateTime.tryParse("2023-11-22T16:13:00"),
+        DateTime.tryParse("2023-11-22T16:13:00"),
+        DateTime.tryParse("2023-11-22T16:14:00"),
+        DateTime.tryParse("2023-11-22T16:14:00"),
+        getStationByCrs(stations, "BCU"),
+        false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T16:28:00"),
-          DateTime.tryParse("2023-11-22T16:28:00"),
-          DateTime.tryParse("2023-11-22T16:30:00"),
-          DateTime.tryParse("2023-11-22T16:30:00"),
-          getStationByCrs(stations, "SOU"),
-          false
+        "1",
+        DateTime.tryParse("2023-11-22T16:28:00"),
+        DateTime.tryParse("2023-11-22T16:28:00"),
+        DateTime.tryParse("2023-11-22T16:30:00"),
+        DateTime.tryParse("2023-11-22T16:30:00"),
+        getStationByCrs(stations, "SOU"),
+        false
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T16:37:00"),
-          DateTime.tryParse("2023-11-22T16:37:00"),
-          DateTime.tryParse("2023-11-22T16:38:00"),
-          DateTime.tryParse("2023-11-22T16:38:00"),
-          getStationByCrs(stations, "SOA"),
-          true
+        "1",
+        DateTime.tryParse("2023-11-22T16:37:00"),
+        DateTime.tryParse("2023-11-22T16:37:00"),
+        DateTime.tryParse("2023-11-22T16:38:00"),
+        DateTime.tryParse("2023-11-22T16:38:00"),
+        getStationByCrs(stations, "SOA"),
+        true
       ),
       StoppingPoint(
-          "1",
-          DateTime.tryParse("2023-11-22T16:47:00"),
-          DateTime.tryParse("2023-11-22T16:49:00"),
-          DateTime.tryParse("2023-11-22T16:48:00"),
-          DateTime.tryParse("2023-11-22T16:52:00"),
-          getStationByCrs(stations, "WIN"),
-          true
+        "1",
+        DateTime.tryParse("2023-11-22T16:47:00"),
+        DateTime.tryParse("2023-11-22T16:49:00"),
+        DateTime.tryParse("2023-11-22T16:48:00"),
+        DateTime.tryParse("2023-11-22T16:52:00"),
+        getStationByCrs(stations, "WIN"),
+        true
       ),
       StoppingPoint(
-          "2",
-          DateTime.tryParse("2023-11-22T17:20:00"),
-          DateTime.tryParse("2023-11-22T17:24:00"),
-          DateTime.tryParse("2023-11-22T17:21:00"),
-          DateTime.tryParse("2023-11-22T17:25:00"),
-          getStationByCrs(stations, "WOK"),
-          false
+        "2",
+        DateTime.tryParse("2023-11-22T17:20:00"),
+        DateTime.tryParse("2023-11-22T17:24:00"),
+        DateTime.tryParse("2023-11-22T17:21:00"),
+        DateTime.tryParse("2023-11-22T17:25:00"),
+        getStationByCrs(stations, "WOK"),
+        false
       ),
       StoppingPoint(
         "16",
@@ -171,29 +166,10 @@ List<Service> getLiveDepartures(String crs) {
     "On Time",
     "2a",
     5
-  ));
-  services.add(Service(
-      20231122002,
+  ),
+  Service(
+      "20231122002",
       StoppingPoint(
-        "3",
-        null,
-        null,
-        DateTime.tryParse("2023-11-22T14:03:00"),
-        DateTime.tryParse("2023-11-22T14:03:00"),
-        getStationByCrs(stations, "WEY"),
-        false
-      ),
-      StoppingPoint(
-        "16",
-        DateTime.tryParse("2023-11-22T18:51:00"),
-        DateTime.tryParse("2023-11-22T18:51:00"),
-        null,
-        null,
-        getStationByCrs(stations, "WAT"),
-        true
-      ),
-      <StoppingPoint>[
-        StoppingPoint(
           "3",
           null,
           null,
@@ -201,8 +177,8 @@ List<Service> getLiveDepartures(String crs) {
           DateTime.tryParse("2023-11-22T14:03:00"),
           getStationByCrs(stations, "WEY"),
           false
-        ),
-        StoppingPoint(
+      ),
+      StoppingPoint(
           "16",
           DateTime.tryParse("2023-11-22T18:51:00"),
           DateTime.tryParse("2023-11-22T18:51:00"),
@@ -210,6 +186,25 @@ List<Service> getLiveDepartures(String crs) {
           null,
           getStationByCrs(stations, "WAT"),
           true
+      ),
+      <StoppingPoint>[
+        StoppingPoint(
+            "3",
+            null,
+            null,
+            DateTime.tryParse("2023-11-22T14:03:00"),
+            DateTime.tryParse("2023-11-22T14:03:00"),
+            getStationByCrs(stations, "WEY"),
+            false
+        ),
+        StoppingPoint(
+            "16",
+            DateTime.tryParse("2023-11-22T18:51:00"),
+            DateTime.tryParse("2023-11-22T18:51:00"),
+            null,
+            null,
+            getStationByCrs(stations, "WAT"),
+            true
         ),
       ],
       "17:27",
@@ -218,9 +213,21 @@ List<Service> getLiveDepartures(String crs) {
       "On Time",
       "1",
       10
-  ));
+  ),
+];
 
-  return services;
+List<Service> getLiveDepartures(String crs) {
+  return tempServices; // Temporarily return hard coded services
+}
+
+Service? getServiceDetails(String rid) {
+  // Temporarily return the service from hard coded values
+
+  for (Service service in tempServices) {
+    if (service.rid == rid) { return service; }
+  }
+
+  return null;
 }
 
 List<Widget> getLiveCards(List<Service> services, BuildContext context) {
@@ -444,6 +451,54 @@ List<Widget> getServiceView(BuildContext context, Service service) {
     ));
 
     i++;
+  }
+
+  return widgets;
+}
+
+Widget? getSavedServiceWidget(String rid, bool oldServices, BuildContext context) {
+  Service? service = getServiceDetails(rid);
+
+  // If the service cannot be found, ignore it
+  if (service == null) { return null; }
+  // If the service finished more than 12 hours ago, ignore it if oldServices is false
+  if (service.destination.eta!.isBefore(DateTime.now().subtract(const Duration(hours: 12))) != oldServices) { return null; }
+
+  return ListTile(
+    title: TextButton(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          "${service.origin.etd?.format('d/m/Y')} - "
+              "${service.origin.station?.stationName} "
+              "(${service.origin.etd?.format('H:i')}) "
+              "to ${service.destination.station?.stationName} "
+              "(${service.destination.eta?.format('H:i')})",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => LiveTrackingPage(
+            service: service,
+          ),
+        ));
+      },
+    ),
+  );
+}
+
+List<Widget> getSavedServices(bool oldServices, BuildContext context) {
+  List<Widget> widgets = [];
+
+  for (String rid in savedServicesBox.keys) {
+    if (savedServicesBox.get(rid) == true) {
+      Widget? serviceWidget = getSavedServiceWidget(rid, oldServices, context);
+
+      if (serviceWidget != null) {
+        widgets.add(serviceWidget);
+      }
+    }
   }
 
   return widgets;

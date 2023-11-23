@@ -26,10 +26,16 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         title: Text("to ${service.destination.station?.stationName}"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.save_outlined),
+            icon: (savedServicesBox.get(service.rid) == true) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
             tooltip: 'Save Service',
             onPressed: () {
-              return;
+              setState(() {
+                if (savedServicesBox.get(service.rid) == true) {
+                  savedServicesBox.put(service.rid, false);
+                } else {
+                  savedServicesBox.put(service.rid, true);
+                }
+              });
             }
           )
         ],

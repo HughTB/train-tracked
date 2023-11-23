@@ -7,7 +7,7 @@ part 'service.g.dart';
 @HiveType(typeId: 2)
 class Service {
   @HiveField(0)
-  int rid;
+  String rid;
   @HiveField(1)
   StoppingPoint origin;
   @HiveField(2)

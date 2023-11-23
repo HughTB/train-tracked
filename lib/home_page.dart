@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'main.dart';
+import 'services_search.dart';
 import 'stations_search.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    'Warning: This app does not use live data! It is currently using a snapshot of data from 18/11/2023',
+                    'Warning: This app does not use live data! It is currently using a snapshot of data from 22/11/2023',
                     style: TextStyle(
                       fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
                       color: Colors.black,
@@ -53,11 +54,20 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  'Saved Journeys',
+                  'Current Services',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-            ],
+            ] + getSavedServices(false, context) + [
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  'Old Services',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+            ] + getSavedServices(true, context),
           ),
         ),
       ),

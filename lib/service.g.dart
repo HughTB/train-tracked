@@ -17,7 +17,7 @@ class ServiceAdapter extends TypeAdapter<Service> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Service(
-      fields[0] as int,
+      fields[0] as String,
       fields[1] as StoppingPoint,
       fields[2] as StoppingPoint,
       (fields[3] as List).cast<StoppingPoint>(),
