@@ -7,25 +7,57 @@ part 'service.g.dart';
 @HiveType(typeId: 2)
 class Service {
   @HiveField(0)
-  String rid;
+  late String rid;
   @HiveField(1)
-  StoppingPoint origin;
+  late String trainId;
   @HiveField(2)
-  StoppingPoint destination;
+  late String operator;
   @HiveField(3)
-  List<StoppingPoint> stoppingPoints;
+  late String operatorCode;
   @HiveField(4)
-  int? numCoaches;
+  String? sta;
   @HiveField(5)
-  String? thisSta;
+  String? ata;
   @HiveField(6)
-  String? thisEta;
+  bool? ataForecast;
   @HiveField(7)
-  String? thisStd;
+  String? std;
   @HiveField(8)
-  String? thisEtd;
+  String? atd;
   @HiveField(9)
-  String? thisPlatform;
+  bool? atdForecast;
+  @HiveField(10)
+  String? platform;
+  @HiveField(11)
+  late List<String> origin = [];
+  @HiveField(12)
+  late List<String> destination = [];
+  @HiveField(13)
+  late List<StoppingPoint> stoppingPoints = [];
 
-  Service(this.rid, this.origin, this.destination, this.stoppingPoints, this.thisSta, this.thisEta, this.thisStd, this.thisEtd, this.thisPlatform, this.numCoaches);
+  Service();
+
+  Service.fromJson(Map<String, dynamic> json) {
+    rid = json['rid'];
+    trainId = json['trainId'];
+    operator = json['operator'];
+    operatorCode = json['operatorCode'];
+    sta = json['sta'];
+    ata = json['ata'];
+    ataForecast = json['ataForecast'];
+    std = json['std'];
+    atd = json['atd'];
+    atdForecast = json['atdForecast'];
+    platform = json['platform'];
+    for (dynamic val in json['origin']) {
+      origin.add(val.toString());
+    }
+    for (dynamic val in json['destination']) {
+      destination.add(val.toString());
+    }
+
+    for (dynamic stoppingPoint in json['stoppingPoints']) {
+      stoppingPoints.add(StoppingPoint.fromJson(stoppingPoint));
+    }
+  }
 }

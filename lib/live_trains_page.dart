@@ -23,6 +23,7 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
       body: Stack(
         children: [
           ListView(
+            physics: const BouncingScrollPhysics(),
             children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
           ),
           Align(

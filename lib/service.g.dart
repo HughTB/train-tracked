@@ -16,44 +16,55 @@ class ServiceAdapter extends TypeAdapter<Service> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Service(
-      fields[0] as String,
-      fields[1] as StoppingPoint,
-      fields[2] as StoppingPoint,
-      (fields[3] as List).cast<StoppingPoint>(),
-      fields[5] as String?,
-      fields[6] as String?,
-      fields[7] as String?,
-      fields[8] as String?,
-      fields[9] as String?,
-      fields[4] as int?,
-    );
+    return Service()
+      ..rid = fields[0] as String
+      ..trainId = fields[1] as String
+      ..operator = fields[2] as String
+      ..operatorCode = fields[3] as String
+      ..sta = fields[4] as String?
+      ..ata = fields[5] as String?
+      ..ataForecast = fields[6] as bool?
+      ..std = fields[7] as String?
+      ..atd = fields[8] as String?
+      ..atdForecast = fields[9] as bool?
+      ..platform = fields[10] as String?
+      ..origin = (fields[11] as List).cast<String>()
+      ..destination = (fields[12] as List).cast<String>()
+      ..stoppingPoints = (fields[13] as List).cast<StoppingPoint>();
   }
 
   @override
   void write(BinaryWriter writer, Service obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.rid)
       ..writeByte(1)
-      ..write(obj.origin)
+      ..write(obj.trainId)
       ..writeByte(2)
-      ..write(obj.destination)
+      ..write(obj.operator)
       ..writeByte(3)
-      ..write(obj.stoppingPoints)
+      ..write(obj.operatorCode)
       ..writeByte(4)
-      ..write(obj.numCoaches)
+      ..write(obj.sta)
       ..writeByte(5)
-      ..write(obj.thisSta)
+      ..write(obj.ata)
       ..writeByte(6)
-      ..write(obj.thisEta)
+      ..write(obj.ataForecast)
       ..writeByte(7)
-      ..write(obj.thisStd)
+      ..write(obj.std)
       ..writeByte(8)
-      ..write(obj.thisEtd)
+      ..write(obj.atd)
       ..writeByte(9)
-      ..write(obj.thisPlatform);
+      ..write(obj.atdForecast)
+      ..writeByte(10)
+      ..write(obj.platform)
+      ..writeByte(11)
+      ..write(obj.origin)
+      ..writeByte(12)
+      ..write(obj.destination)
+      ..writeByte(13)
+      ..write(obj.stoppingPoints);
   }
 
   @override

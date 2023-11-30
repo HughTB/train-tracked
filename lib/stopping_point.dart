@@ -9,17 +9,33 @@ class StoppingPoint {
   @HiveField(0)
   String? platform;
   @HiveField(1)
-  DateTime? sta;
+  String? sta;
   @HiveField(2)
-  DateTime? eta;
+  String? ata;
   @HiveField(3)
-  DateTime? std;
+  bool? ataForecast;
   @HiveField(4)
-  DateTime? etd;
+  String? std;
   @HiveField(5)
-  Station? station;
+  String? atd;
   @HiveField(6)
-  bool forecast;
+  bool? atdForecast;
+  @HiveField(7)
+  String? crs;
+  @HiveField(8)
+  String? attachRid;
 
-  StoppingPoint(this.platform, this.sta, this.eta, this.std, this.etd, this.station, this.forecast);
+  StoppingPoint();
+
+  StoppingPoint.fromJson(Map<String, dynamic> json) {
+    platform = json['platform'];
+    sta = json['sta'];
+    ata = json['ata'];
+    ataForecast = json['ataForecast'];
+    std = json['std'];
+    atd = json['atd'];
+    atdForecast = json['atdForecast'];
+    crs = json['crs'];
+    attachRid = json['attachRid'];
+  }
 }

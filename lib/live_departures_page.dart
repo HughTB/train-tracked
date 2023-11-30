@@ -21,45 +21,52 @@ class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: (savedStationsBox.containsKey(crs) || savedStationsBox.get("home")?.crs == crs) ? const Icon(Icons.star) : const Icon(Icons.star_border),
-            tooltip: 'Favourite Station',
-            onPressed: () {
-              if (savedStationsBox.get("home")?.crs == crs) { return; }
+    return FutureBuilder(
+      future: getLiveCards(crs, context),
+      initialData: const <Widget>[Text("Loading...")],
+      builder: (BuildContext context, AsyncSnapshot<List<Widget>> liveCards) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(widget.title),
+            actions: [
+              IconButton(
+                  icon: (savedStationsBox.containsKey(crs) || savedStationsBox.get("home")?.crs == crs) ? const Icon(Icons.star) : const Icon(Icons.star_border),
+                  tooltip: 'Favourite Station',
+                  onPressed: () {
+                    if (savedStationsBox.get("home")?.crs == crs) { return; }
 
-              setState(() {
-                if (savedStationsBox.containsKey(crs)) {
-                  savedStationsBox.delete(crs);
-                } else {
-                  savedStationsBox.put(crs, getStationByCrs(stations, crs));
+                    setState(() {
+                      if (savedStationsBox.containsKey(crs)) {
+                        savedStationsBox.delete(crs);
+                      } else {
+                        savedStationsBox.put(crs, getStationByCrs(stations, crs));
+                      }
+                    });
+                  }
+              )
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(10),
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: (liveCards.data != null) ? liveCards.data! : <Widget>[],
+            ),
+          ),
+          bottomNavigationBar: NavigationBar(
+              destinations: navBarItems,
+              selectedIndex: currentNavIndex,
+              indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+              onDestinationSelected: (int index) {
+                if (index != currentNavIndex) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacementNamed(context, getNavRoute(index));
                 }
-              });
-            }
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: getLiveCards(getLiveDepartures(crs), context),
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-          destinations: navBarItems,
-          selectedIndex: currentNavIndex,
-          indicatorColor: Theme.of(context).colorScheme.inversePrimary,
-          onDestinationSelected: (int index) {
-            if (index != currentNavIndex) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.pushReplacementNamed(context, getNavRoute(index));
-            }
-          }
-      ),
+              }
+          ),
+        );
+      }
     );
   }
 }

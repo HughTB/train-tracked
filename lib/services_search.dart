@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:date_time_format/date_time_format.dart';
 
+import 'api.dart';
 import 'live_tracking_page.dart';
 import 'main.dart';
 import 'service.dart';
@@ -11,236 +12,19 @@ const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
 const Color cancelledColour = Colors.red;
 
-List<Service> tempServices = [
-  Service(
-    "20231122001",
-    StoppingPoint(
-      "3",
-      null,
-      null,
-      DateTime.tryParse("2023-11-22T15:03:00"),
-      DateTime.tryParse("2023-11-22T15:03:00"),
-      getStationByCrs(stations, "WEY"),
-      false
-    ),
-    StoppingPoint(
-      "16",
-      DateTime.tryParse("2023-11-22T17:51:00"),
-      DateTime.tryParse("2023-11-22T17:54:00"),
-      null,
-      null,
-      getStationByCrs(stations, "WAT"),
-      true
-    ),
-    <StoppingPoint>[
-      StoppingPoint(
-        "3",
-        null,
-        null,
-        DateTime.tryParse("2023-11-22T15:03:00"),
-        DateTime.tryParse("2023-11-22T15:03:00"),
-        getStationByCrs(stations, "WEY"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:12:00"),
-        DateTime.tryParse("2023-11-22T15:12:00"),
-        DateTime.tryParse("2023-11-22T15:13:00"),
-        DateTime.tryParse("2023-11-22T15:13:00"),
-        getStationByCrs(stations, "DCH"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:27:00"),
-        DateTime.tryParse("2023-11-22T15:27:00"),
-        DateTime.tryParse("2023-11-22T15:28:00"),
-        DateTime.tryParse("2023-11-22T15:28:00"),
-        getStationByCrs(stations, "WRM"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:34:00"),
-        DateTime.tryParse("2023-11-22T15:34:00"),
-        DateTime.tryParse("2023-11-22T15:35:00"),
-        DateTime.tryParse("2023-11-22T15:35:00"),
-        getStationByCrs(stations, "HAM"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:39:00"),
-        DateTime.tryParse("2023-11-22T15:39:00"),
-        DateTime.tryParse("2023-11-22T15:40:00"),
-        DateTime.tryParse("2023-11-22T15:40:00"),
-        getStationByCrs(stations, "POO"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:44:00"),
-        DateTime.tryParse("2023-11-22T15:44:00"),
-        DateTime.tryParse("2023-11-22T15:44:00"),
-        DateTime.tryParse("2023-11-22T15:44:00"),
-        getStationByCrs(stations, "PKS"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T15:48:00"),
-        DateTime.tryParse("2023-11-22T15:48:00"),
-        DateTime.tryParse("2023-11-22T15:48:00"),
-        DateTime.tryParse("2023-11-22T15:48:00"),
-        getStationByCrs(stations, "BSM"),
-        false
-      ),
-      StoppingPoint(
-        "2",
-        DateTime.tryParse("2023-11-22T15:54:00"),
-        DateTime.tryParse("2023-11-22T15:54:00"),
-        DateTime.tryParse("2023-11-22T15:59:00"),
-        DateTime.tryParse("2023-11-22T15:59:00"),
-        getStationByCrs(stations, "BMH"),
-        false
-      ),
-      StoppingPoint(
-        "2",
-        DateTime.tryParse("2023-11-22T16:13:00"),
-        DateTime.tryParse("2023-11-22T16:13:00"),
-        DateTime.tryParse("2023-11-22T16:14:00"),
-        DateTime.tryParse("2023-11-22T16:14:00"),
-        getStationByCrs(stations, "BCU"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T16:28:00"),
-        DateTime.tryParse("2023-11-22T16:28:00"),
-        DateTime.tryParse("2023-11-22T16:30:00"),
-        DateTime.tryParse("2023-11-22T16:30:00"),
-        getStationByCrs(stations, "SOU"),
-        false
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T16:37:00"),
-        DateTime.tryParse("2023-11-22T16:37:00"),
-        DateTime.tryParse("2023-11-22T16:38:00"),
-        DateTime.tryParse("2023-11-22T16:38:00"),
-        getStationByCrs(stations, "SOA"),
-        true
-      ),
-      StoppingPoint(
-        "1",
-        DateTime.tryParse("2023-11-22T16:47:00"),
-        DateTime.tryParse("2023-11-22T16:49:00"),
-        DateTime.tryParse("2023-11-22T16:48:00"),
-        DateTime.tryParse("2023-11-22T16:52:00"),
-        getStationByCrs(stations, "WIN"),
-        true
-      ),
-      StoppingPoint(
-        "2",
-        DateTime.tryParse("2023-11-22T17:20:00"),
-        DateTime.tryParse("2023-11-22T17:24:00"),
-        DateTime.tryParse("2023-11-22T17:21:00"),
-        DateTime.tryParse("2023-11-22T17:25:00"),
-        getStationByCrs(stations, "WOK"),
-        false
-      ),
-      StoppingPoint(
-        "16",
-        DateTime.tryParse("2023-11-22T17:51:00"),
-        DateTime.tryParse("2023-11-22T17:54:00"),
-        null,
-        null,
-        getStationByCrs(stations, "WAT"),
-        true
-      ),
-    ],
-    "16:27",
-    "On Time",
-    "16:30",
-    "On Time",
-    "2a",
-    5
-  ),
-  Service(
-      "20231122002",
-      StoppingPoint(
-          "3",
-          null,
-          null,
-          DateTime.tryParse("2023-11-22T14:03:00"),
-          DateTime.tryParse("2023-11-22T14:03:00"),
-          getStationByCrs(stations, "WEY"),
-          false
-      ),
-      StoppingPoint(
-          "16",
-          DateTime.tryParse("2023-11-22T18:51:00"),
-          DateTime.tryParse("2023-11-22T18:51:00"),
-          null,
-          null,
-          getStationByCrs(stations, "WAT"),
-          true
-      ),
-      <StoppingPoint>[
-        StoppingPoint(
-            "3",
-            null,
-            null,
-            DateTime.tryParse("2023-11-22T14:03:00"),
-            DateTime.tryParse("2023-11-22T14:03:00"),
-            getStationByCrs(stations, "WEY"),
-            false
-        ),
-        StoppingPoint(
-            "16",
-            DateTime.tryParse("2023-11-22T18:51:00"),
-            DateTime.tryParse("2023-11-22T18:51:00"),
-            null,
-            null,
-            getStationByCrs(stations, "WAT"),
-            true
-        ),
-      ],
-      "17:27",
-      "On Time",
-      "17:30",
-      "On Time",
-      "1",
-      10
-  ),
-];
-
-List<Service> getLiveDepartures(String crs) {
-  return tempServices; // Temporarily return hard coded services
-}
-
-Service? getServiceDetails(String rid) {
-  // Temporarily return the service from hard coded values
-
-  for (Service service in tempServices) {
-    if (service.rid == rid) { return service; }
-  }
-
-  return null;
-}
-
-List<Widget> getLiveCards(List<Service> services, BuildContext context) {
+Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
   List<Widget> cards = [];
 
-  if (services.isEmpty) {
+  List<Service>? services = await getDepartures(crs);
+
+  if (services == null) {
     cards.add(const Text("There are no trains :,("));
     return cards;
   }
 
   for (Service service in services) {
-    bool delayedDeparture = (service.thisEtd != "On Time");
-    bool delayedArrival = (service.destination.eta != service.destination.sta);
+    bool delayedArrival = (service.ata != service.sta && service.ata != null);
+    bool delayedDeparture = (service.atd != service.std && service.atd != null);
 
     cards.add(
       Card(
@@ -266,13 +50,13 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "to ${service.destination.station?.stationName}",
+                          "to ${getStationByCrs(stations, service.destination[0])?.stationName}",
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        Text(
-                          "${service.numCoaches} Coaches",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        )
+                        // Text(
+                        //   "${service.numCoaches} Coaches",
+                        //   style: Theme.of(context).textTheme.bodyMedium,
+                        // )
                       ],
                     ),
                   ),
@@ -281,43 +65,21 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
                   padding: const EdgeInsets.only(right: 10),
                   child: Column(
                     children: [
-                      Text.rich(
-                        TextSpan(
+                      RichText(
+                        textAlign: TextAlign.end,
+                        text: TextSpan(
                           children: (delayedDeparture ? <TextSpan>[TextSpan(
-                              text: "${service.thisEtd} ",
+                              text: "${DateTime.tryParse(service.atd!)?.format('H:i')}\n",
                               style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                                fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
                                 color: delayedColour,
                               )
                           )] : <TextSpan>[]) + <TextSpan>[TextSpan(
-                            text: "${service.thisStd}",
+                            text: "${DateTime.tryParse(service.std!)?.format('H:i')}",
                             style: TextStyle(
-                              fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
-                              color: Theme.of(context).textTheme.bodyMedium?.color,
+                              fontSize: delayedDeparture ? Theme.of(context).textTheme.bodyMedium?.fontSize : Theme.of(context).textTheme.titleLarge?.fontSize,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
                               decoration: delayedDeparture ? TextDecoration.lineThrough : null,
-                            ),
-                          )],
-                        ),
-                      ),
-                      Container(
-                        width: 1.5,
-                        height: 15,
-                        color: Theme.of(context).textTheme.bodyMedium?.color,
-                      ),
-                      Text.rich(
-                        TextSpan(
-                          children: (delayedArrival ? <TextSpan>[TextSpan(
-                            text: "${service.destination.eta?.format('H:i')} ",
-                            style: TextStyle(
-                              fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
-                              color: delayedColour,
-                            )
-                          )] : <TextSpan>[]) + <TextSpan>[TextSpan(
-                            text: "${service.destination.sta?.format('H:i')}",
-                            style: TextStyle(
-                              fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
-                              color: Theme.of(context).textTheme.bodyMedium?.color,
-                              decoration: delayedArrival ? TextDecoration.lineThrough : null,
                             ),
                           )],
                         ),
@@ -332,7 +94,7 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
-                      "${service.thisPlatform}",
+                      "${service.platform}",
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ],
@@ -355,15 +117,21 @@ List<Widget> getLiveCards(List<Service> services, BuildContext context) {
   return cards;
 }
 
-List<Widget> getServiceView(BuildContext context, Service service) {
+Future<List<Widget>> getServiceView(BuildContext context, String rid) async {
   List<Widget> widgets = [];
+
+  Service? service = await getServiceDetails(rid);
+
+  if (service == null) {
+    return [];
+  }
 
   int i = 0;
   int last = service.stoppingPoints.length - 1;
 
   for (StoppingPoint stoppingPoint in service.stoppingPoints) {
-    bool delayedDeparture = (stoppingPoint.std != stoppingPoint.etd);
-    bool delayedArrival = (stoppingPoint.sta != stoppingPoint.eta);
+    bool delayedArrival = (stoppingPoint.sta != stoppingPoint.ata && stoppingPoint.ata != null);
+    bool delayedDeparture = (stoppingPoint.std != stoppingPoint.atd && stoppingPoint.atd != null);
 
     widgets.add(Row(
       children: [
@@ -395,7 +163,7 @@ List<Widget> getServiceView(BuildContext context, Service service) {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: "${stoppingPoint.sta?.format('H:i')}",
+                    text: DateTime.tryParse(stoppingPoint.sta!)?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
                       decoration: (delayedArrival) ? TextDecoration.lineThrough : null,
@@ -403,7 +171,7 @@ List<Widget> getServiceView(BuildContext context, Service service) {
                   ),
                 ] + ((delayedArrival) ? [
                   TextSpan(
-                    text: " ${stoppingPoint.eta?.format('H:i')}",
+                    text: " ${DateTime.tryParse(stoppingPoint.ata!)?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedArrival) ? delayedColour : Theme.of(context).canvasColor,
                     ),
@@ -415,7 +183,7 @@ List<Widget> getServiceView(BuildContext context, Service service) {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: "${stoppingPoint.std?.format('H:i')}",
+                    text: DateTime.tryParse(stoppingPoint.std!)?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
                       decoration: (delayedDeparture) ? TextDecoration.lineThrough : null,
@@ -423,7 +191,7 @@ List<Widget> getServiceView(BuildContext context, Service service) {
                   ),
                 ] + ((delayedDeparture) ? [
                   TextSpan(
-                    text: " ${stoppingPoint.etd?.format('H:i')}",
+                    text: " ${DateTime.tryParse(stoppingPoint.atd!)?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedDeparture) ? delayedColour : Theme.of(context).canvasColor,
                     ),
@@ -438,11 +206,11 @@ List<Widget> getServiceView(BuildContext context, Service service) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${stoppingPoint.station?.stationName}",
+              "${getStationByCrs(stations, stoppingPoint.crs)?.stationName}",
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Text(
-              "Platform ${stoppingPoint.platform}",
+              "Platform ${(stoppingPoint.platform != null) ? stoppingPoint.platform : "tbc"}",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -456,24 +224,24 @@ List<Widget> getServiceView(BuildContext context, Service service) {
   return widgets;
 }
 
-Widget? getSavedServiceWidget(String rid, bool oldServices, BuildContext context) {
-  Service? service = getServiceDetails(rid);
+Future<Widget?> getSavedServiceWidget(String rid, bool oldServices, BuildContext context) async {
+  Service? service = await getServiceDetails(rid);
 
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
   // If the service finished more than 12 hours ago, ignore it if oldServices is false
-  if (service.destination.eta!.isBefore(DateTime.now().subtract(const Duration(hours: 12))) != oldServices) { return null; }
+  if (DateTime.tryParse(service.stoppingPoints.last.sta!)?.isBefore(DateTime.now().subtract(const Duration(hours: 12))) != oldServices) { return null; }
 
   return ListTile(
     title: TextButton(
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          "${service.origin.etd?.format('d/m/Y')} - "
-              "${service.origin.station?.stationName} "
-              "(${service.origin.etd?.format('H:i')}) "
-              "to ${service.destination.station?.stationName} "
-              "(${service.destination.eta?.format('H:i')})",
+          "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('d/m/Y')} - "
+              "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
+              "(${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')}) "
+              "to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName} "
+              "(${DateTime.tryParse(service.stoppingPoints.last.sta!)?.format('H:i')})",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
@@ -488,12 +256,12 @@ Widget? getSavedServiceWidget(String rid, bool oldServices, BuildContext context
   );
 }
 
-List<Widget> getSavedServices(bool oldServices, BuildContext context) {
+Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) async {
   List<Widget> widgets = [];
 
   for (String rid in savedServicesBox.keys) {
     if (savedServicesBox.get(rid) == true) {
-      Widget? serviceWidget = getSavedServiceWidget(rid, oldServices, context);
+      Widget? serviceWidget = await getSavedServiceWidget(rid, oldServices, context);
 
       if (serviceWidget != null) {
         widgets.add(serviceWidget);

@@ -16,35 +16,40 @@ class StoppingPointAdapter extends TypeAdapter<StoppingPoint> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return StoppingPoint(
-      fields[0] as String?,
-      fields[1] as DateTime?,
-      fields[2] as DateTime?,
-      fields[3] as DateTime?,
-      fields[4] as DateTime?,
-      fields[5] as Station?,
-      fields[6] as bool,
-    );
+    return StoppingPoint()
+      ..platform = fields[0] as String?
+      ..sta = fields[1] as String?
+      ..ata = fields[2] as String?
+      ..ataForecast = fields[3] as bool?
+      ..std = fields[4] as String?
+      ..atd = fields[5] as String?
+      ..atdForecast = fields[6] as bool?
+      ..crs = fields[7] as String?
+      ..attachRid = fields[8] as String?;
   }
 
   @override
   void write(BinaryWriter writer, StoppingPoint obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.platform)
       ..writeByte(1)
       ..write(obj.sta)
       ..writeByte(2)
-      ..write(obj.eta)
+      ..write(obj.ata)
       ..writeByte(3)
-      ..write(obj.std)
+      ..write(obj.ataForecast)
       ..writeByte(4)
-      ..write(obj.etd)
+      ..write(obj.std)
       ..writeByte(5)
-      ..write(obj.station)
+      ..write(obj.atd)
       ..writeByte(6)
-      ..write(obj.forecast);
+      ..write(obj.atdForecast)
+      ..writeByte(7)
+      ..write(obj.crs)
+      ..writeByte(8)
+      ..write(obj.attachRid);
   }
 
   @override
