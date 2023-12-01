@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'service.dart';
@@ -8,49 +9,91 @@ import 'service.dart';
 // const String apiToken = "";
 import 'api_settings.dart';
 
-Future<Service?> getServiceDetails(String rid) async {
-  final response = await http.get(
-    Uri.parse("$apiEndpoint/details?rid=$rid&token=$apiToken"),
-  );
+Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger) async {
+  try {
+    final response = await http.get(
+      Uri.parse("$apiEndpoint/details?rid=$rid&token=$apiToken"),
+    );
 
-  if (response.statusCode == 200) {
-    return Service.fromJson(jsonDecode(response.body)['services']);
+    if (response.statusCode == 200) {
+      return Service.fromJson(jsonDecode(response.body)['services']);
+    } else {
+      messenger.showSnackBar(
+          SnackBar(
+            content: Text("${response.statusCode}: ${response.reasonPhrase}"),
+          )
+      );
+    }
+  } on Exception catch (e) {
+    messenger.showSnackBar(
+        SnackBar(
+          content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
+        )
+    );
   }
 
   return null;
 }
 
-Future<List<Service>?> getDepartures(String crs) async {
-  final response = await http.get(
-    Uri.parse("$apiEndpoint/departures?crs=$crs&token=$apiToken"),
-  );
+Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenger) async {
+  try {
+    final response = await http.get(
+      Uri.parse("$apiEndpoint/departures?crs=$crs&token=$apiToken"),
+    );
 
-  if (response.statusCode == 200) {
-    List<Service> services = [];
+    if (response.statusCode == 200) {
+      List<Service> services = [];
 
-    for (dynamic service in jsonDecode(response.body)['services']) {
-      services.add(Service.fromJson(service));
+      for (dynamic service in jsonDecode(response.body)['services']) {
+        services.add(Service.fromJson(service));
+      }
+
+      return services;
+    } else {
+      messenger.showSnackBar(
+          SnackBar(
+            content: Text("${response.statusCode}: ${response.reasonPhrase}"),
+          )
+      );
     }
-
-    return services;
+  } on Exception catch (e) {
+    messenger.showSnackBar(
+        SnackBar(
+          content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
+        )
+    );
   }
 
   return null;
 }
 
-Future<List<Service>?> getArrivals(String crs) async {
-  final response = await http.get(
-    Uri.parse("$apiEndpoint/arrivals?crs=$crs&token=$apiToken"),
-  );
+Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState messenger) async {
+  try {
+    final response = await http.get(
+      Uri.parse("$apiEndpoint/arrivals?crs=$crs&token=$apiToken"),
+    );
 
-  if (response.statusCode == 200) {
-    List<Service> services = [];
+    if (response.statusCode == 200) {
+      List<Service> services = [];
 
-    for (dynamic service in jsonDecode(response.body)['services']) {
-      services.add(Service.fromJson(service));
+      for (dynamic service in jsonDecode(response.body)['services']) {
+        services.add(Service.fromJson(service));
+      }
+
+      return services;
+    } else {
+      messenger.showSnackBar(
+          SnackBar(
+            content: Text("${response.statusCode}: ${response.reasonPhrase}"),
+          )
+      );
     }
-
-    return services;
+  } on Exception catch (e) {
+    messenger.showSnackBar(
+        SnackBar(
+          content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
+        )
+    );
   }
 
   return null;

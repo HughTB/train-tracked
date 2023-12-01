@@ -30,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -108,6 +109,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     preferencesBox.put("cancellationNotif", value);
                   });
                 }
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Image.asset(
+                (Theme.of(context).brightness == Brightness.dark) ? "assets/powered_by_nre_white.png" : "assets/powered_by_nre_black.png",
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),

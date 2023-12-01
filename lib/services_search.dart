@@ -15,10 +15,10 @@ const Color cancelledColour = Colors.red;
 Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
   List<Widget> cards = [];
 
-  List<Service>? services = await getDepartures(crs);
+  List<Service>? services = await getDepartures(crs, ScaffoldMessenger.of(context));
 
   if (services == null) {
-    cards.add(const Text("There are no trains :,("));
+    cards.add(const Text("There are no trains at this time :("));
     return cards;
   }
 
@@ -120,7 +120,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
 Future<List<Widget>> getServiceView(BuildContext context, String rid) async {
   List<Widget> widgets = [];
 
-  Service? service = await getServiceDetails(rid);
+  Service? service = await getServiceDetails(rid, ScaffoldMessenger.of(context));
 
   if (service == null) {
     return [];
@@ -225,7 +225,7 @@ Future<List<Widget>> getServiceView(BuildContext context, String rid) async {
 }
 
 Future<Widget?> getSavedServiceWidget(String rid, bool oldServices, BuildContext context) async {
-  Service? service = await getServiceDetails(rid);
+  Service? service = await getServiceDetails(rid, ScaffoldMessenger.of(context));
 
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
