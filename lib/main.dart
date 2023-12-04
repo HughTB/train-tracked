@@ -21,7 +21,7 @@ String? stationSearchTerm;
 // Hive boxes
 late Box preferencesBox; // Preferences storage
 late Box<Station?> savedStationsBox; // Saved stations storage
-late Box<bool> savedServicesBox;
+late Box<Service?> savedServicesBox;
 
 // Stations loaded from assets/stations.csv
 late final List<Station> stations;
@@ -76,7 +76,7 @@ Future<void> main() async {
   // Get hive boxes
   preferencesBox = await Hive.openBox('preferences');
   savedStationsBox = await Hive.openBox<Station?>('savedStations');
-  savedServicesBox = await Hive.openBox<bool>('savedServices');
+  savedServicesBox = await Hive.openBox<Service?>('savedServices');
 
   // Ensure that all settings are set to default if not found (should only be needed on first load, but better safe than sorry!)
   preferencesBox.put("platformChangeNotif", preferencesBox.get("platformChangeNotif") ?? false); // If value does not exist, set to false, etc

@@ -29,6 +29,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
     cards.add(
       Card(
         child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: Row(
@@ -224,13 +225,19 @@ Future<List<Widget>> getServiceView(BuildContext context, String rid) async {
   return widgets;
 }
 
-Future<Widget?> getSavedServiceWidget(String rid, bool oldServices, BuildContext context) async {
-  Service? service = await getServiceDetails(rid, ScaffoldMessenger.of(context));
-
+Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, BuildContext context) async {
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
-  // If the service finished more than 12 hours ago, ignore it if oldServices is false
-  if (DateTime.tryParse(service.stoppingPoints.last.sta!)?.isBefore(DateTime.now().subtract(const Duration(hours: 12))) != oldServices) { return null; }
+
+  // If the service finished more than 24 hours ago, ignore it if oldServices is false
+  bool? thisServiceIsOld = DateTime.tryParse(service.stoppingPoints.last.sta!)?.isBefore(DateTime.now().subtract(const Duration(hours: 24)));
+  if (thisServiceIsOld != oldServices) { return null; }
+  if (thisServiceIsOld == false) {
+    service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context));
+  }
+
+  // If the service can no longer be found, ignore it
+  if (service == null) { return null; }
 
   return ListTile(
     title: TextButton(
@@ -248,7 +255,7 @@ Future<Widget?> getSavedServiceWidget(String rid, bool oldServices, BuildContext
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) => LiveTrackingPage(
-            service: service,
+            service: service!,
           ),
         ));
       },
@@ -260,8 +267,8 @@ Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) as
   List<Widget> widgets = [];
 
   for (String rid in savedServicesBox.keys) {
-    if (savedServicesBox.get(rid) == true) {
-      Widget? serviceWidget = await getSavedServiceWidget(rid, oldServices, context);
+    if (savedServicesBox.get(rid) != null) {
+      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, context);
 
       if (serviceWidget != null) {
         widgets.add(serviceWidget);

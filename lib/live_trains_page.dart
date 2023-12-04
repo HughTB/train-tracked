@@ -22,9 +22,12 @@ class _LiveTrainsPageState extends State<LiveTrainsPage> {
       ),
       body: Stack(
         children: [
-          ListView(
-            physics: const BouncingScrollPhysics(),
-            children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
+            ),
           ),
           Align(
             alignment: Alignment.topCenter,

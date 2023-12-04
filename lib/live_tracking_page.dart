@@ -31,14 +31,14 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             title: Text("to ${getStationByCrs(stations, (service.stoppingPoints.isEmpty) ? service.destination.first : (service.stoppingPoints.last.crs))?.stationName}"),
             actions: [
               IconButton(
-                  icon: (savedServicesBox.get(service.rid) == true) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
+                  icon: (savedServicesBox.get(service.rid) != null) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
                   tooltip: 'Save Service',
                   onPressed: () {
                     setState(() {
-                      if (savedServicesBox.get(service.rid) == true) {
-                        savedServicesBox.put(service.rid, false);
+                      if (savedServicesBox.get(service.rid) != null) {
+                        savedServicesBox.put(service.rid, null);
                       } else {
-                        savedServicesBox.put(service.rid, true);
+                        savedServicesBox.put(service.rid, service);
                       }
                     });
                   }

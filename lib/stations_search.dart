@@ -52,32 +52,31 @@ List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Bu
   }
 
   searchTerm = searchTerm.toLowerCase();
-  int foundStations = 0;
 
+  List<Station> foundStations = [];
   List<Station> tempStations = stations.toList();
 
   if (searchTerm.length <= 3) {
     for (Station station in stations) {
-      if (foundStations > 25) break;
+      if (foundStations.length > 25) break;
 
       if (station.crs!.toLowerCase().contains(searchTerm)) {
-        foundStations++;
-
-        results.add(getStationWidget(station, context));
-
+        foundStations.add(station);
         tempStations.remove(station);
       }
     }
   }
 
   for (Station station in tempStations) {
-    if (foundStations > 25) break;
+    if (foundStations.length > 25) break;
 
     if (station.stationName!.toLowerCase().contains(searchTerm)) {
-      foundStations++;
-
-      results.add(getStationWidget(station, context));
+      foundStations.add(station);
     }
+  }
+
+  for (int i = 0; i < foundStations.length; i++) {
+    results.add(getStationWidget(foundStations[i], i == (foundStations.length - 1), context));
   }
 
   return results;
@@ -95,25 +94,33 @@ Station? getStationByCrs(List<Station> stations, String? crs) {
   return null;
 }
 
-Widget getStationWidget(Station station, BuildContext context) {
-  return ListTile(
-    title: TextButton(
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          "${station.stationName} (${station.crs})",
-          style: Theme.of(context).textTheme.bodyLarge,
+Widget getStationWidget(Station station, bool last, BuildContext context) {
+  return InkWell(
+    borderRadius: const BorderRadius.all(Radius.circular(10)),
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              color: Theme.of(context).dividerColor.withAlpha((last) ? 0 : 50),
+              width: 1.0
+          ),
         ),
       ),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) => LiveDeparturesPage(
-            title: station.stationName!,
-            crs: station.crs!,
-          ),
-        ));
-      },
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          "${station.stationName} (${station.crs})",
+        ),
+      ),
     ),
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => LiveDeparturesPage(
+          title: station.stationName!,
+          crs: station.crs!,
+        ),
+      ));
+    },
   );
 }
 
@@ -121,12 +128,12 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Bui
   List<Widget> widgets = [];
 
   if (home != null) {
-    widgets.add(getStationWidget(home, context));
+    widgets.add(getStationWidget(home, stations.length == 1, context));
   }
 
-  for (Station? station in stations) {
-    if (station != home && station != null) {
-      widgets.add(getStationWidget(station, context));
+  for (int i = 0; i < stations.length; i++) {
+    if (stations[i] != home && stations[i] != null) {
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - 2), context));
     }
   }
 
