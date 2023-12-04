@@ -266,6 +266,14 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, BuildC
 Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) async {
   List<Widget> widgets = [];
 
+  if (savedServicesBox.keys.isEmpty) {
+    return [
+      const Text(
+        "You've not saved any services yet :)"
+      ),
+    ];
+  }
+
   for (String rid in savedServicesBox.keys) {
     if (savedServicesBox.get(rid) != null) {
       Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, context);

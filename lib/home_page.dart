@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      'Current Services',
+                      'Saved Services',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),

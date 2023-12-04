@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,6 +25,12 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger)
           )
       );
     }
+  } on SocketException catch (e) {
+    messenger.showSnackBar(
+        const SnackBar(
+          content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
+        )
+    );
   } on Exception catch (e) {
     messenger.showSnackBar(
         SnackBar(
@@ -56,6 +63,12 @@ Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenge
           )
       );
     }
+  } on SocketException catch (e) {
+    messenger.showSnackBar(
+        const SnackBar(
+          content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
+        )
+    );
   } on Exception catch (e) {
     messenger.showSnackBar(
         SnackBar(
@@ -88,6 +101,12 @@ Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState messenger)
           )
       );
     }
+  } on SocketException catch (e) {
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
+      )
+    );
   } on Exception catch (e) {
     messenger.showSnackBar(
         SnackBar(
