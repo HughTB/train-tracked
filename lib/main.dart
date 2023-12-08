@@ -7,9 +7,6 @@ import 'service.dart';
 import 'station.dart';
 import 'stopping_point.dart';
 
-// Import helper functions from other files
-import 'stations_search.dart';
-
 // Import pages from other files
 import 'home_page.dart';
 import 'live_trains_page.dart';
@@ -22,10 +19,6 @@ String? stationSearchTerm;
 late Box preferencesBox; // Preferences storage
 late Box<Station?> savedStationsBox; // Saved stations storage
 late Box<Service?> savedServicesBox;
-
-// Stations loaded from assets/stations.csv
-late final List<Station> stations;
-late final List<DropdownMenuEntry> homeStationEntries;
 
 // Nav bar items to show at the bottom of all screens
 const List<NavigationDestination> navBarItems = <NavigationDestination>[
@@ -83,11 +76,6 @@ Future<void> main() async {
   preferencesBox.put("delayNotif", preferencesBox.get("delayNotif") ?? false);
   preferencesBox.put("cancellationNotif", preferencesBox.get("cancellationNotif") ?? false);
   preferencesBox.put("themeMode", preferencesBox.get("themeMode") ?? 0);
-
-  // Get the list of stations from assets/stations.csv
-  stations = await getStationList();
-  // Build the list of entries for the dropdown list on the settings page
-  homeStationEntries = getStationsDropdownList(stations);
 
   runApp(MyApp());
 }

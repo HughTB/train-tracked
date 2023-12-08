@@ -4,6 +4,7 @@ import 'main.dart';
 import 'service.dart';
 import 'services_search.dart';
 import 'stations_search.dart';
+import 'stations.g.dart';
 
 class LiveTrackingPage extends StatefulWidget {
   const LiveTrackingPage({super.key, required this.service});

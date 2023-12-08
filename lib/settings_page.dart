@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'stations_search.dart';
+import 'stations.g.dart';
 
 const List<DropdownMenuEntry> themeModeEntries = <DropdownMenuEntry>[
   DropdownMenuEntry(value: 0, label: 'Follow System Theme'),

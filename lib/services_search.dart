@@ -6,6 +6,7 @@ import 'live_tracking_page.dart';
 import 'main.dart';
 import 'service.dart';
 import 'stations_search.dart';
+import 'stations.g.dart';
 import 'stopping_point.dart';
 
 const Color onTimeColour = Colors.lightGreen;

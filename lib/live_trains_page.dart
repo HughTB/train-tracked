@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'stations_search.dart';
+import 'stations.g.dart';
 
 class LiveTrainsPage extends StatefulWidget {
   const LiveTrainsPage({super.key, required this.title});

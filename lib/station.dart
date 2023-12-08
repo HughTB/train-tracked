@@ -5,13 +5,13 @@ part 'station.g.dart';
 @HiveType(typeId: 0)
 class Station {
   @HiveField(0)
-  String? stationName;
+  final String? stationName;
   @HiveField(1)
-  double? lat;
+  final double? lat;
   @HiveField(2)
-  double? long;
+  final double? long;
   @HiveField(3)
-  String? crs;
+  final String? crs;
 
-  Station(this.stationName, this.lat, this.long, this.crs);
+  const Station(this.stationName, this.lat, this.long, this.crs);
 }
