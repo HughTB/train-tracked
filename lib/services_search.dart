@@ -228,7 +228,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   return widgets;
 }
 
-Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, BuildContext context) async {
+Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool last, BuildContext context) async {
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
 
@@ -242,10 +242,19 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, BuildC
   // If the service can no longer be found, ignore it
   if (service == null) { return null; }
 
-  return ListTile(
-    title: TextButton(
-      child: Align(
-        alignment: Alignment.centerLeft,
+  return InkWell(
+    borderRadius: const BorderRadius.all(Radius.circular(10)),
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              color: Theme.of(context).dividerColor.withAlpha((last) ? 0 : 50),
+              width: 1.0
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
         child: Text(
           "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('d/m/Y')} - "
               "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
@@ -255,14 +264,14 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, BuildC
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) => LiveTrackingPage(
-            service: service!,
-          ),
-        ));
-      },
     ),
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => LiveTrackingPage(
+          service: service!,
+        ),
+      ));
+    },
   );
 }
 
@@ -277,9 +286,11 @@ Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) as
     ];
   }
 
-  for (String rid in savedServicesBox.keys) {
+  for (int i = 0; i < savedServicesBox.length; i++) {
+    String rid = savedServicesBox.keys.toList()[i];
+
     if (savedServicesBox.get(rid) != null) {
-      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, context);
+      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, i == (savedServicesBox.length - 1), context);
 
       if (serviceWidget != null) {
         widgets.add(serviceWidget);
