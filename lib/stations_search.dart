@@ -70,6 +70,7 @@ Widget getStationWidget(Station station, bool last, BuildContext context) {
         padding: const EdgeInsets.all(10),
         child: Text(
           "${station.stationName} (${station.crs})",
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     ),
@@ -87,13 +88,31 @@ Widget getStationWidget(Station station, bool last, BuildContext context) {
 List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, BuildContext context) {
   List<Widget> widgets = [];
 
-  if (home != null) {
+  if (home == null) {
+    widgets.add(DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+                color: Theme.of(context).dividerColor.withAlpha((stations.isEmpty) ? 0 : 50),
+                width: 1.0
+            ),
+          ),
+        ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          "You haven't set a home station yet! You can do this on the settings page.\nIt will always show up at the top of this list for easy access",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      )
+    ));
+  } else {
     widgets.add(getStationWidget(home, stations.length == 1, context));
   }
 
   for (int i = 0; i < stations.length; i++) {
     if (stations[i] != home && stations[i] != null) {
-      widgets.add(getStationWidget(stations[i]!, i == (stations.length - 2), context));
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), context));
     }
   }
 
