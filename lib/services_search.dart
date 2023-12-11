@@ -119,10 +119,12 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
   return cards;
 }
 
-Future<List<Widget>> getServiceView(BuildContext context, String rid) async {
+Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool? updateServiceDetails) async {
   List<Widget> widgets = [];
 
-  Service? service = await getServiceDetails(rid, ScaffoldMessenger.of(context));
+  if (updateServiceDetails == true) {
+    service = await getServiceDetails(service!.rid, ScaffoldMessenger.of(context));
+  }
 
   if (service == null) {
     return [];

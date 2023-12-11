@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:train_tracked/api.dart';
 
 import 'main.dart';
 import 'service.dart';
@@ -23,7 +24,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getServiceView(context, service.rid),
+      future: getServiceView(context, service, true),
       initialData: const <Widget>[Text("Loading...")],
       builder: (BuildContext context, AsyncSnapshot<List<Widget>> serviceView) {
         return Scaffold(
@@ -34,7 +35,10 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
               IconButton(
                   icon: (savedServicesBox.get(service.rid) != null) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
                   tooltip: 'Save Service',
-                  onPressed: () {
+                  onPressed: () async {
+                    if (savedServicesBox.get(service.rid) == null) {
+                      service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context)) ?? service;
+                    }
                     setState(() {
                       if (savedServicesBox.get(service.rid) != null) {
                         savedServicesBox.put(service.rid, null);
