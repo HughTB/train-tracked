@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:train_tracked/api.dart';
 
 import 'main.dart';
@@ -25,7 +26,13 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getServiceView(context, service, true),
-      initialData: const <Widget>[Text("Loading...")],
+      initialData: <Widget>[Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: SpinKitFoldingCube(
+          color: Theme.of(context).primaryColorLight,
+        ),
+      )],
       builder: (BuildContext context, AsyncSnapshot<List<Widget>> serviceView) {
         return Scaffold(
           appBar: AppBar(

@@ -136,7 +136,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   for (StoppingPoint stoppingPoint in service.stoppingPoints) {
     bool delayedArrival = (stoppingPoint.sta != stoppingPoint.ata && stoppingPoint.ata != null);
     bool delayedDeparture = (stoppingPoint.std != stoppingPoint.atd && stoppingPoint.atd != null);
-
+    
     widgets.add(Row(
       children: [
         Stack(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'main.dart';
 import 'stations_search.dart';
@@ -24,7 +25,13 @@ class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getLiveCards(crs, context),
-      initialData: const <Widget>[Text("Loading...")],
+      initialData: <Widget>[Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: SpinKitFoldingCube(
+          color: Theme.of(context).primaryColor,
+        ),
+      )],
       builder: (BuildContext context, AsyncSnapshot<List<Widget>> liveCards) {
         return Scaffold(
           appBar: AppBar(
