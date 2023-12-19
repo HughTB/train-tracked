@@ -32,7 +32,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         height: 200,
         alignment: Alignment.center,
         child: SpinKitFoldingCube(
-          color: Theme.of(context).primaryColorLight,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
         ),
       )],
       builder: (BuildContext context, AsyncSnapshot<List<Widget>> serviceView) {
