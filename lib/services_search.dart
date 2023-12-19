@@ -24,8 +24,8 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
   }
 
   for (Service service in services) {
-    bool delayedArrival = (service.ata != service.sta && service.ata != null);
-    bool delayedDeparture = (service.atd != service.std && service.atd != null);
+    bool delayedDeparture = (service.atd?.substring(0, 16) != service.std?.substring(0, 16) && service.atd != null);
+    bool cancelled = service.cancelledHere ?? false;
 
     cards.add(
       Card(
@@ -40,7 +40,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                   width: 10,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: (delayedDeparture || delayedArrival) ? delayedColour : onTimeColour,
+                      color: (cancelled) ? cancelledColour : (delayedDeparture) ? delayedColour : onTimeColour,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
                     ),
                   ),
@@ -70,7 +70,13 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                       RichText(
                         textAlign: TextAlign.end,
                         text: TextSpan(
-                          children: (delayedDeparture ? <TextSpan>[TextSpan(
+                          children: (cancelled ? <TextSpan>[TextSpan(
+                              text: "Cancelled\n",
+                              style: TextStyle(
+                                fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+                                color: cancelledColour,
+                              )
+                          )] : delayedDeparture ? <TextSpan>[TextSpan(
                               text: "${DateTime.tryParse(service.atd!)?.format('H:i')}\n",
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
@@ -79,9 +85,9 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                           )] : <TextSpan>[]) + <TextSpan>[TextSpan(
                             text: "${DateTime.tryParse(service.std!)?.format('H:i')}",
                             style: TextStyle(
-                              fontSize: delayedDeparture ? Theme.of(context).textTheme.bodyMedium?.fontSize : Theme.of(context).textTheme.titleLarge?.fontSize,
+                              fontSize: (delayedDeparture || cancelled) ? Theme.of(context).textTheme.bodyMedium?.fontSize : Theme.of(context).textTheme.titleLarge?.fontSize,
                               color: Theme.of(context).textTheme.bodyLarge?.color,
-                              decoration: delayedDeparture ? TextDecoration.lineThrough : null,
+                              decoration: (delayedDeparture || cancelled) ? TextDecoration.lineThrough : null,
                             ),
                           )],
                         ),
@@ -96,7 +102,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
-                      "${service.platform}",
+                      service.platform ?? "tbc",
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ],
@@ -108,6 +114,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) => LiveTrackingPage(
                 service: service,
+                oldService: false,
               )
             ));
           },
@@ -134,8 +141,9 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   int last = service.stoppingPoints.length - 1;
 
   for (StoppingPoint stoppingPoint in service.stoppingPoints) {
-    bool delayedArrival = (stoppingPoint.sta != stoppingPoint.ata && stoppingPoint.ata != null);
-    bool delayedDeparture = (stoppingPoint.std != stoppingPoint.atd && stoppingPoint.atd != null);
+    bool delayedArrival = (stoppingPoint.sta?.substring(0, 16) != stoppingPoint.ata?.substring(0, 16) && stoppingPoint.ata != null);
+    bool delayedDeparture = (stoppingPoint.std?.substring(0, 16) != stoppingPoint.atd?.substring(0, 16) && stoppingPoint.atd != null);
+    bool cancelled = stoppingPoint.cancelledHere ?? false;
     
     widgets.add(Row(
       children: [
@@ -162,7 +170,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: SizedBox(
-            width: 50,
+            width: 70,
             child: (i == last) ? Text.rich(
               TextSpan(
                 children: [
@@ -170,12 +178,19 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
                     text: DateTime.tryParse(stoppingPoint.sta!)?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
-                      decoration: (delayedArrival) ? TextDecoration.lineThrough : null,
+                      decoration: (delayedArrival || cancelled) ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                ] + ((delayedArrival) ? [
+                ] + ((cancelled) ? [
                   TextSpan(
-                    text: " ${DateTime.tryParse(stoppingPoint.ata!)?.format('H:i')}",
+                    text: "\nCancelled",
+                    style: TextStyle(
+                      color: (cancelled) ? cancelledColour : Theme.of(context).canvasColor,
+                    ),
+                  ),
+                ] : (delayedArrival) ? [
+                  TextSpan(
+                    text: "\n${DateTime.tryParse(stoppingPoint.ata!)?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedArrival) ? delayedColour : Theme.of(context).canvasColor,
                     ),
@@ -190,12 +205,19 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
                     text: DateTime.tryParse(stoppingPoint.std!)?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
-                      decoration: (delayedDeparture) ? TextDecoration.lineThrough : null,
+                      decoration: (delayedDeparture || cancelled) ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                ] + ((delayedDeparture) ? [
+                ] + ((cancelled) ? [
                   TextSpan(
-                    text: " ${DateTime.tryParse(stoppingPoint.atd!)?.format('H:i')}",
+                    text: "\nCancelled",
+                    style: TextStyle(
+                      color: (cancelled) ? cancelledColour : Theme.of(context).canvasColor,
+                    ),
+                  ),
+                ] : (delayedDeparture) ? [
+                  TextSpan(
+                    text: "\n${DateTime.tryParse(stoppingPoint.atd!)?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedDeparture) ? delayedColour : Theme.of(context).canvasColor,
                     ),
@@ -269,6 +291,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
       Navigator.push(context, MaterialPageRoute(
         builder: (context) => LiveTrackingPage(
           service: service!,
+          oldService: thisServiceIsOld ?? true,
         ),
       ));
     },
@@ -277,14 +300,6 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
 
 Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) async {
   List<Widget> widgets = [];
-
-  if (savedServicesBox.keys.isEmpty) {
-    return [
-      const Text(
-        "You've not saved any services yet :)"
-      ),
-    ];
-  }
 
   for (int i = 0; i < savedServicesBox.length; i++) {
     String rid = savedServicesBox.keys.toList()[i];
@@ -296,6 +311,15 @@ Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) as
         widgets.add(serviceWidget);
       }
     }
+  }
+
+  if (widgets.isEmpty) {
+    return [
+      Text(
+        (oldServices) ? "There are no old services yet!" : "There are no current services!",
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    ];
   }
 
   return widgets;

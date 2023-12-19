@@ -9,23 +9,25 @@ import 'stations_search.dart';
 import 'stations.g.dart';
 
 class LiveTrackingPage extends StatefulWidget {
-  const LiveTrackingPage({super.key, required this.service});
+  const LiveTrackingPage({super.key, required this.service, required this.oldService});
 
   final Service service;
+  final bool oldService;
 
   @override
-  State<LiveTrackingPage> createState() => _LiveTrackingPageState(service);
+  State<LiveTrackingPage> createState() => _LiveTrackingPageState(service, oldService);
 }
 
 class _LiveTrackingPageState extends State<LiveTrackingPage> {
   Service service;
+  bool oldService;
 
-  _LiveTrackingPageState(this.service);
+  _LiveTrackingPageState(this.service, this.oldService);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getServiceView(context, service, true),
+      future: getServiceView(context, service, !oldService),
       initialData: <Widget>[Container(
         height: 200,
         alignment: Alignment.center,

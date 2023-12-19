@@ -34,6 +34,8 @@ class Service {
   late List<String> destination = [];
   @HiveField(13)
   late List<StoppingPoint> stoppingPoints = [];
+  @HiveField(14)
+  bool? cancelledHere;
 
   Service();
 
@@ -59,5 +61,7 @@ class Service {
     for (dynamic stoppingPoint in json['stoppingPoints']) {
       stoppingPoints.add(StoppingPoint.fromJson(stoppingPoint));
     }
+
+    cancelledHere = json['cancelled'];
   }
 }

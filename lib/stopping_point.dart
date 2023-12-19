@@ -24,6 +24,8 @@ class StoppingPoint {
   String? crs;
   @HiveField(8)
   String? attachRid;
+  @HiveField(9)
+  bool? cancelledHere;
 
   StoppingPoint();
 
@@ -37,5 +39,6 @@ class StoppingPoint {
     atdForecast = json['atdForecast'];
     crs = json['crs'];
     attachRid = json['attachRid'];
+    cancelledHere = json['cancelledHere'];
   }
 }

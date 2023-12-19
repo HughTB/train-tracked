@@ -25,13 +25,14 @@ class StoppingPointAdapter extends TypeAdapter<StoppingPoint> {
       ..atd = fields[5] as String?
       ..atdForecast = fields[6] as bool?
       ..crs = fields[7] as String?
-      ..attachRid = fields[8] as String?;
+      ..attachRid = fields[8] as String?
+      ..cancelledHere = fields[9] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, StoppingPoint obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.platform)
       ..writeByte(1)
@@ -49,7 +50,9 @@ class StoppingPointAdapter extends TypeAdapter<StoppingPoint> {
       ..writeByte(7)
       ..write(obj.crs)
       ..writeByte(8)
-      ..write(obj.attachRid);
+      ..write(obj.attachRid)
+      ..writeByte(9)
+      ..write(obj.cancelledHere);
   }
 
   @override
