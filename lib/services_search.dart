@@ -13,10 +13,15 @@ const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
 const Color cancelledColour = Colors.red;
 
-Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
+Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext context) async {
   List<Widget> cards = [];
+  List<Service>? services;
 
-  List<Service>? services = await getDepartures(crs, ScaffoldMessenger.of(context));
+  if (arrivals) {
+    services = await getArrivals(crs, ScaffoldMessenger.of(context));
+  } else {
+    services = await getDepartures(crs, ScaffoldMessenger.of(context));
+  }
 
   if (services == null) {
     cards.add(const Text("There are no trains at this time :("));
@@ -25,7 +30,10 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
 
   for (Service service in services) {
     bool delayedDeparture = (service.atd?.substring(0, 16) != service.std?.substring(0, 16) && service.atd != null);
+    bool delayedArrival = (service.ata?.substring(0, 16) != service.sta?.substring(0, 16) && service.ata != null);
     bool cancelled = service.cancelledHere ?? false;
+
+    bool delayed = (arrivals) ? delayedArrival : delayedDeparture;
 
     cards.add(
       Card(
@@ -40,7 +48,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                   width: 10,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: (cancelled) ? cancelledColour : (delayedDeparture) ? delayedColour : onTimeColour,
+                      color: (cancelled) ? cancelledColour : (delayed) ? delayedColour : onTimeColour,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
                     ),
                   ),
@@ -52,7 +60,7 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "to ${getStationByCrs(stations, service.destination[0])?.stationName}",
+                          "${arrivals ? "from" : "to"} ${getStationByCrs(stations, (arrivals) ? service.origin.first : service.destination.first)?.stationName}",
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         // Text(
@@ -76,18 +84,18 @@ Future<List<Widget>> getLiveCards(String crs, BuildContext context) async {
                                 fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
                                 color: cancelledColour,
                               )
-                          )] : delayedDeparture ? <TextSpan>[TextSpan(
-                              text: "${DateTime.tryParse(service.atd!)?.format('H:i')}\n",
+                          )] : delayed ? <TextSpan>[TextSpan(
+                              text: "${DateTime.tryParse((arrivals) ? service.ata! : service.atd!)?.format('H:i')}\n",
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
                                 color: delayedColour,
                               )
                           )] : <TextSpan>[]) + <TextSpan>[TextSpan(
-                            text: "${DateTime.tryParse(service.std!)?.format('H:i')}",
+                            text: "${DateTime.tryParse((arrivals) ? service.sta! : service.std!)?.format('H:i')}",
                             style: TextStyle(
-                              fontSize: (delayedDeparture || cancelled) ? Theme.of(context).textTheme.bodyMedium?.fontSize : Theme.of(context).textTheme.titleLarge?.fontSize,
+                              fontSize: (delayed || cancelled) ? Theme.of(context).textTheme.bodyMedium?.fontSize : Theme.of(context).textTheme.titleLarge?.fontSize,
                               color: Theme.of(context).textTheme.bodyLarge?.color,
-                              decoration: (delayedDeparture || cancelled) ? TextDecoration.lineThrough : null,
+                              decoration: (delayed || cancelled) ? TextDecoration.lineThrough : null,
                             ),
                           )],
                         ),
