@@ -65,10 +65,10 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
                           "${arrivals ? "from" : "to"} ${getStationByCrs(stations, (arrivals) ? service.origin.first : service.destination.first)?.stationName}",
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        // Text(
-                        //   "${service.numCoaches} Coaches",
-                        //   style: Theme.of(context).textTheme.bodyMedium,
-                        // )
+                        Text(
+                          service.operator,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        )
                       ],
                     ),
                   ),

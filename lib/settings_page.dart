@@ -76,11 +76,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               },
             ),
-            const Divider(),
-            Text(
-              'Notifications',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
             SwitchListTile(
                 title: const Text('Show Rail Replacement as Cancellation'),
                 subtitle: const Text('Show Rail Replacement Busses as a cancellation rather than delay'),
@@ -90,6 +85,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     preferencesBox.put("railReplacementCancellation", value);
                   });
                 }
+            ),
+            const Divider(),
+            Text(
+              'Notifications',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             SwitchListTile(
                 title: const Text('Platform Change'),
@@ -121,6 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 }
             ),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Image.asset(
