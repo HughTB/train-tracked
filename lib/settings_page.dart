@@ -82,6 +82,16 @@ class _SettingsPageState extends State<SettingsPage> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SwitchListTile(
+                title: const Text('Show Rail Replacement as Cancellation'),
+                subtitle: const Text('Show Rail Replacement Busses as a cancellation rather than delay'),
+                value: preferencesBox.get("railReplacementCancellation"),
+                onChanged: (bool value) {
+                  setState(() {
+                    preferencesBox.put("railReplacementCancellation", value);
+                  });
+                }
+            ),
+            SwitchListTile(
                 title: const Text('Platform Change'),
                 subtitle: const Text('Send a notification if a saved train changes platform'),
                 value: preferencesBox.get("platformChangeNotif"),

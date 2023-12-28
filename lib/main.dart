@@ -72,7 +72,8 @@ Future<void> main() async {
   savedServicesBox = await Hive.openBox<Service?>('savedServices');
 
   // Ensure that all settings are set to default if not found (should only be needed on first load, but better safe than sorry!)
-  preferencesBox.put("platformChangeNotif", preferencesBox.get("platformChangeNotif") ?? false); // If value does not exist, set to false, etc
+  preferencesBox.put("railReplacementCancellation", preferencesBox.get("railReplacementCancellation") ?? false); // If value does not exist, set to false, etc
+  preferencesBox.put("platformChangeNotif", preferencesBox.get("platformChangeNotif") ?? false);
   preferencesBox.put("delayNotif", preferencesBox.get("delayNotif") ?? false);
   preferencesBox.put("cancellationNotif", preferencesBox.get("cancellationNotif") ?? false);
   preferencesBox.put("themeMode", preferencesBox.get("themeMode") ?? 0);

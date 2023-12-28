@@ -34,6 +34,8 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
     bool cancelled = service.cancelledHere ?? false;
 
     bool delayed = (arrivals) ? delayedArrival : delayedDeparture;
+    bool replacementBus = service.platform == "BUS";
+    bool replacementBusCancellation = preferencesBox.get("railReplacementCancellation");
 
     cards.add(
       Card(
@@ -48,7 +50,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
                   width: 10,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: (cancelled) ? cancelledColour : (delayed) ? delayedColour : onTimeColour,
+                      color: (cancelled || (replacementBus && replacementBusCancellation)) ? cancelledColour : (delayed || replacementBus) ? delayedColour : onTimeColour,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
                     ),
                   ),
