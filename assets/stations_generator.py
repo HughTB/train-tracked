@@ -35,7 +35,7 @@ for station in stations:
 
 generated_file += '];'
 
-with open('../lib/stations.g.dart', 'w') as file:
+with open('../lib/classes/station_list.g.dart', 'w') as file:
     file.write(generated_file)
 
-print("Written to ../lib/stations.g.dart")
+print("Written to ../lib/station_list.g.dart")

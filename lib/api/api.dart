@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'service.dart';
+import '../classes/service.dart';
 
 // This file literally contains two definitions
 // const String apiEndpoint = "";

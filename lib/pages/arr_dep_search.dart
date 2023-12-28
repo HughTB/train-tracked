@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'main.dart';
-import 'stations_search.dart';
-import 'stations.g.dart';
+import '../main.dart';
+import '../helpers/stations_search.dart';
+import '../classes/station_list.g.dart';
 
-class LiveTrainsPage extends StatefulWidget {
-  const LiveTrainsPage({super.key, required this.title});
+class ArrDepSearchPage extends StatefulWidget {
+  const ArrDepSearchPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<LiveTrainsPage> createState() => _LiveTrainsPageState();
+  State<ArrDepSearchPage> createState() => _ArrDepSearchPageState();
 }
 
-class _LiveTrainsPageState extends State<LiveTrainsPage> {
+class _ArrDepSearchPageState extends State<ArrDepSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:train_tracked/api.dart';
+import 'package:train_tracked/api/api.dart';
 
-import 'main.dart';
-import 'service.dart';
-import 'services_search.dart';
-import 'stations_search.dart';
-import 'stations.g.dart';
+import '../main.dart';
+import '../classes/service.dart';
+import '../helpers/services_search.dart';
+import '../helpers/stations_search.dart';
+import '../classes/station_list.g.dart';
 
-class LiveTrackingPage extends StatefulWidget {
-  const LiveTrackingPage({super.key, required this.service, required this.oldService});
+class ServiceViewPage extends StatefulWidget {
+  const ServiceViewPage({super.key, required this.service, required this.oldService});
 
   final Service service;
   final bool oldService;
 
   @override
-  State<LiveTrackingPage> createState() => _LiveTrackingPageState(service, oldService);
+  State<ServiceViewPage> createState() => _ServiceViewPageState(service, oldService);
 }
 
-class _LiveTrackingPageState extends State<LiveTrackingPage> {
+class _ServiceViewPageState extends State<ServiceViewPage> {
   Service service;
   bool oldService;
 
-  _LiveTrackingPageState(this.service, this.oldService);
+  _ServiceViewPageState(this.service, this.oldService);
 
   @override
   Widget build(BuildContext context) {

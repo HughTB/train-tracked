@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'main.dart';
-import 'live_departures_page.dart';
-import 'station.dart';
+import '../main.dart';
+import '../pages/arr_dep.dart';
+import '../classes/station.dart';
 
 List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, BuildContext context, Color textColour) {
   List<Widget> results = [];
@@ -76,7 +76,7 @@ Widget getStationWidget(Station station, bool last, BuildContext context) {
     ),
     onTap: () {
       Navigator.push(context, MaterialPageRoute(
-        builder: (context) => LiveDeparturesPage(
+        builder: (context) => ArrDepPage(
           title: station.stationName!,
           crs: station.crs!,
         ),

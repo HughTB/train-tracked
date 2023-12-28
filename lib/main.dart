@@ -4,14 +4,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/adapters.dart';
 
 // Import classes for hive boxes
-import 'service.dart';
-import 'station.dart';
-import 'stopping_point.dart';
+import 'classes/service.dart';
+import 'classes/station.dart';
+import 'classes/stopping_point.dart';
 
 // Import pages from other files
-import 'home_page.dart';
-import 'live_trains_page.dart';
-import 'settings_page.dart';
+import 'pages/home.dart';
+import 'pages/arr_dep_search.dart';
+import 'pages/settings.dart';
 
 // Current LiveDeparturesPage search term
 String? stationSearchTerm;
@@ -95,8 +95,7 @@ Future<void> main() async {
 
   // Request notification permission
   notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
-
-  // Sample notification code
+  
   // Sample notification code
   // const AndroidNotificationDetails androidNotifDetails = AndroidNotificationDetails('trainUpdates', 'Train Updates',
   //   importance: Importance.high,
@@ -121,7 +120,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Train Tracked',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF080808), brightness: Brightness.light),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8635E3), brightness: Brightness.light),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
@@ -131,7 +130,7 @@ class MyApp extends StatelessWidget {
       themeMode: themeMode, // Follow system theme
       home: const HomePage(title: 'Home'),
       routes: <String, WidgetBuilder>{
-        "/live-trains": (context) => const LiveTrainsPage(title: 'Live Trains'),
+        "/live-trains": (context) => const ArrDepSearchPage(title: 'Live Trains'),
         "/settings": (context) => const SettingsPage(title: 'Settings'),
       },
     );

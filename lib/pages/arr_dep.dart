@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import 'main.dart';
-import 'stations_search.dart';
-import 'services_search.dart';
-import 'stations.g.dart';
+import '../main.dart';
+import '../helpers/stations_search.dart';
+import '../helpers/services_search.dart';
+import '../classes/station_list.g.dart';
 
-class LiveDeparturesPage extends StatefulWidget {
-  const LiveDeparturesPage({super.key, required this.title, required this.crs});
+class ArrDepPage extends StatefulWidget {
+  const ArrDepPage({super.key, required this.title, required this.crs});
 
   final String title;
   final String crs;
 
   @override
-  State<LiveDeparturesPage> createState() => _LiveDeparturesPageState(crs);
+  State<ArrDepPage> createState() => _ArrDepPageState(crs);
 }
 
-class _LiveDeparturesPageState extends State<LiveDeparturesPage> {
+class _ArrDepPageState extends State<ArrDepPage> {
   String crs;
   bool arrivals = false;
 
   late Future<List<Widget>> liveCardsFuture;
 
-  _LiveDeparturesPageState(this.crs);
+  _ArrDepPageState(this.crs);
 
   void refreshCards() {
     setState(() {

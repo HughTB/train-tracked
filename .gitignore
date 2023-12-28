@@ -44,4 +44,4 @@ app.*.map.json
 /android/app/release
 
 # Do not upload API secrets to git, please and thank you
-lib/api_settings.dart
+lib/api/api_settings.dart

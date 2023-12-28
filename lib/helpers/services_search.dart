@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:date_time_format/date_time_format.dart';
 
-import 'api.dart';
-import 'live_tracking_page.dart';
-import 'main.dart';
-import 'service.dart';
+import '../api/api.dart';
+import '../pages/service_view.dart';
+import '../main.dart';
+import '../classes/service.dart';
 import 'stations_search.dart';
-import 'stations.g.dart';
-import 'stopping_point.dart';
+import '../classes/station_list.g.dart';
+import '../classes/stopping_point.dart';
 
 const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
@@ -122,7 +122,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
           ),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
-              builder: (context) => LiveTrackingPage(
+              builder: (context) => ServiceViewPage(
                 service: service,
                 oldService: false,
               )
@@ -299,7 +299,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
     ),
     onTap: () {
       Navigator.push(context, MaterialPageRoute(
-        builder: (context) => LiveTrackingPage(
+        builder: (context) => ServiceViewPage(
           service: service!,
           oldService: thisServiceIsOld ?? true,
         ),
