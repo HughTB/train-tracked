@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:train_tracked/api.dart';
 
@@ -63,7 +64,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             padding: const EdgeInsets.all(10),
             child: ListView(
               physics: const BouncingScrollPhysics(),
-              children: serviceView.data!,
+              children: (serviceView.data == null) ? [] : serviceView.data!,
             ),
           ),
           bottomNavigationBar: NavigationBar(

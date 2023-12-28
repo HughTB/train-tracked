@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
-                ] + futures.data![0] + [
+                ] + ((futures.data?[0] == null) ? [] : futures.data![0]) + [
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
-                ] + futures.data![1],
+                ] + ((futures.data?[1] == null) ? [] : futures.data![1]),
               ),
             ),
           ),
