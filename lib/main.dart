@@ -86,7 +86,7 @@ Future<void> main() async {
 
   // Send a test notification
   // sendNotification(10, "Test", "This is a test notification!");
-  
+
   runApp(MyApp());
 }
 
