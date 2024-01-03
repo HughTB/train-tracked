@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/adapters.dart';
 
 // Import classes for hive boxes
@@ -12,6 +11,9 @@ import 'classes/stopping_point.dart';
 import 'pages/home.dart';
 import 'pages/arr_dep_search.dart';
 import 'pages/settings.dart';
+
+// Import other helper functions
+import 'helpers/notifications.dart';
 
 // Current LiveDeparturesPage search term
 String? stationSearchTerm;
@@ -59,9 +61,6 @@ String getNavRoute(int index) {
   }
 }
 
-// Notification stuff
-FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -82,28 +81,12 @@ Future<void> main() async {
   preferencesBox.put("cancellationNotif", preferencesBox.get("cancellationNotif") ?? false);
   preferencesBox.put("themeMode", preferencesBox.get("themeMode") ?? 0);
 
-  // Initialise notification plugin
-  const AndroidInitializationSettings notifSettingsAndroid =
-  AndroidInitializationSettings('notif_icon');
-  const LinuxInitializationSettings notifSettingsLinux =
-  LinuxInitializationSettings(
-      defaultActionName: 'Open notification');
-  const InitializationSettings notifInitSettings = InitializationSettings(
-      android: notifSettingsAndroid,
-      linux: notifSettingsLinux);
-  await notifications.initialize(notifInitSettings);
+  initNotifications();
+  getNotificationsPermission();
 
-  // Request notification permission
-  notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+  // Send a test notification
+  // sendNotification(10, "Test", "This is a test notification!");
   
-  // Sample notification code
-  // const AndroidNotificationDetails androidNotifDetails = AndroidNotificationDetails('trainUpdates', 'Train Updates',
-  //   importance: Importance.high,
-  //   priority: Priority.high,
-  // );
-  // const NotificationDetails notifDetails = NotificationDetails(android: androidNotifDetails);
-  // notifications.show(10, "Train Cancelled", "The 10:00 train to Southampton Central has been cancelled", notifDetails);
-
   runApp(MyApp());
 }
 
