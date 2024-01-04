@@ -89,7 +89,7 @@ Future<void> main() async {
   preferencesBox.put("themeMode", preferencesBox.get("themeMode") ?? 0);
 
   initNotifications();
-  getNotificationsPermission();
+  await getNotificationsPermission();
 
   // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so multiple are needed, starting with an offset
   Workmanager().initialize(callbackDispatcher);
