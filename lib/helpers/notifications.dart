@@ -18,6 +18,7 @@ void initNotifications() async {
 
 void getNotificationsPermission() {
   notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+  notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestExactAlarmsPermission();
 }
 
 void sendNotification(int id, String title, String body) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:workmanager/workmanager.dart';
 
 // Import classes for hive boxes
 import 'classes/service.dart';
@@ -14,6 +15,9 @@ import 'pages/settings.dart';
 
 // Import other helper functions
 import 'helpers/notifications.dart';
+
+// Import background services
+import 'services/background.dart';
 
 // Current LiveDeparturesPage search term
 String? stationSearchTerm;
@@ -84,8 +88,11 @@ Future<void> main() async {
   initNotifications();
   getNotificationsPermission();
 
-  // Send a test notification
-  // sendNotification(10, "Test", "This is a test notification!");
+  // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so 3 are required, offset 5 minutes from each other :P
+  Workmanager().initialize(callbackDispatcher);
+  Workmanager().registerPeriodicTask("tt_service_checker_1", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 0));
+  Workmanager().registerPeriodicTask("tt_service_checker_2", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 5));
+  Workmanager().registerPeriodicTask("tt_service_checker_3", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 10));
 
   runApp(MyApp());
 }
