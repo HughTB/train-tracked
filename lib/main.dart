@@ -65,6 +65,9 @@ String getNavRoute(int index) {
   }
 }
 
+// Update interval in minutes
+const updateInterval = 3;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -88,11 +91,18 @@ Future<void> main() async {
   initNotifications();
   getNotificationsPermission();
 
-  // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so 3 are required, offset 5 minutes from each other :P
+  // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so multiple are needed, starting with an offset
   Workmanager().initialize(callbackDispatcher);
-  Workmanager().registerPeriodicTask("tt_service_checker_1", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 0));
-  Workmanager().registerPeriodicTask("tt_service_checker_2", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 5));
-  Workmanager().registerPeriodicTask("tt_service_checker_3", "service_check", frequency: const Duration(minutes: 15), existingWorkPolicy: ExistingWorkPolicy.replace, initialDelay: const Duration(minutes: 10));
+
+  for (int i = 0; i < (15 / updateInterval); i++) {
+    Workmanager().registerPeriodicTask(
+      "tt_service_checker_$i",
+      "service_check",
+      frequency: const Duration(minutes: 15),
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      initialDelay: Duration(minutes: i * (15 ~/ updateInterval))
+    );
+  }
 
   runApp(MyApp());
 }

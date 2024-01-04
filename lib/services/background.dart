@@ -68,28 +68,28 @@ void callbackDispatcher() {
           StoppingPoint updatedSP = updated.stoppingPoints[i];
 
           if (delayNotif) {
-            if ((oldSP.ata != updatedSP.ata) && (updatedSP.ataForecast ?? false)) {
+            if ((updatedSP.ataForecast ?? false) && (oldSP.ata != updatedSP.ata)) {
               final delayedMins = DateTime.tryParse(updatedSP.ata!)!.difference(DateTime.tryParse(updatedSP.sta!)!).inMinutes;
-              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}\n";
-              break;
-            } else if ((oldSP.atd != updatedSP.atd) && (updatedSP.atdForecast ?? false)) {
+              if (notifBody != "") { notifBody += "\n"; }
+              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+            } else if ((updatedSP.atdForecast ?? false) && (oldSP.atd != updatedSP.atd)) {
               final delayedMins = DateTime.tryParse(updatedSP.atd!)!.difference(DateTime.tryParse(updatedSP.std!)!).inMinutes;
-              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}\n";
-              break;
+              if (notifBody != "") { notifBody += "\n"; }
+              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
             }
           }
 
           if (cancellationNotif) {
             if ((oldSP.cancelledHere != updatedSP.cancelledHere)) {
-              notifBody += "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}\n";
-              break;
+              if (notifBody != "") { notifBody += "\n"; }
+              notifBody += "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
             }
           }
 
           if (platformChangeNotif) {
             if ((oldSP.platform != updatedSP.platform)) {
-              notifBody += "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}\n";
-              break;
+              if (notifBody != "") { notifBody += "\n"; }
+              notifBody += "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}";
             }
           }
         }
