@@ -67,6 +67,13 @@ void callbackDispatcher() {
           StoppingPoint oldSP = service.stoppingPoints[i];
           StoppingPoint updatedSP = updated.stoppingPoints[i];
 
+          if (cancellationNotif) {
+            if ((oldSP.cancelledHere != updatedSP.cancelledHere)) {
+              if (notifBody != "") { notifBody += "\n"; }
+              notifBody += "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+            }
+          }
+
           if (delayNotif) {
             if ((updatedSP.ataForecast ?? false) && (oldSP.ata != updatedSP.ata)) {
               final delayedMins = DateTime.tryParse(updatedSP.ata!)!.difference(DateTime.tryParse(updatedSP.sta!)!).inMinutes;
@@ -76,13 +83,6 @@ void callbackDispatcher() {
               final delayedMins = DateTime.tryParse(updatedSP.atd!)!.difference(DateTime.tryParse(updatedSP.std!)!).inMinutes;
               if (notifBody != "") { notifBody += "\n"; }
               notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
-            }
-          }
-
-          if (cancellationNotif) {
-            if ((oldSP.cancelledHere != updatedSP.cancelledHere)) {
-              if (notifBody != "") { notifBody += "\n"; }
-              notifBody += "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
             }
           }
 
