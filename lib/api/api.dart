@@ -11,7 +11,7 @@ import '../classes/service.dart';
 // const String apiToken = "";
 import 'api_settings.dart';
 
-Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger) async {
+Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
       Uri.parse("$apiEndpoint/details?rid=$rid&token=$apiToken"),
@@ -20,7 +20,7 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger)
     if (response.statusCode == 200) {
       return Service.fromJson(jsonDecode(response.body)['services']);
     } else {
-      messenger.showSnackBar(
+      messenger?.showSnackBar(
           SnackBar(
             content: Text("${response.statusCode}: ${response.reasonPhrase}"),
           )
@@ -28,14 +28,14 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger)
     }
   } on SocketException catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
         const SnackBar(
           content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
         )
     );
   } on Exception catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
         SnackBar(
           content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
         )
@@ -45,7 +45,7 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState messenger)
   return null;
 }
 
-Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenger) async {
+Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
       Uri.parse("$apiEndpoint/departures?crs=$crs&token=$apiToken"),
@@ -60,7 +60,7 @@ Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenge
 
       return services;
     } else {
-      messenger.showSnackBar(
+      messenger?.showSnackBar(
           SnackBar(
             content: Text("${response.statusCode}: ${response.reasonPhrase}"),
           )
@@ -68,14 +68,14 @@ Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenge
     }
   } on SocketException catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
         const SnackBar(
           content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
         )
     );
   } on Exception catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
         SnackBar(
           content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
         )
@@ -85,7 +85,7 @@ Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState messenge
   return null;
 }
 
-Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState messenger) async {
+Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
       Uri.parse("$apiEndpoint/arrivals?crs=$crs&token=$apiToken"),
@@ -100,7 +100,7 @@ Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState messenger)
 
       return services;
     } else {
-      messenger.showSnackBar(
+      messenger?.showSnackBar(
           SnackBar(
             content: Text("${response.statusCode}: ${response.reasonPhrase}"),
           )
@@ -108,14 +108,14 @@ Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState messenger)
     }
   } on SocketException catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
       const SnackBar(
         content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
       )
     );
   } on Exception catch (e) {
     log(e.toString());
-    messenger.showSnackBar(
+    messenger?.showSnackBar(
         SnackBar(
           content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
         )
