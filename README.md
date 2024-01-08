@@ -8,7 +8,7 @@ A 'better' UK train tracking app. Created as part of a Level 5 Computer Science 
 
 - Flutter setup and in your PATH
 - The Android SDK if building for Android
-- The (Train Tracked API)[https://github.com/HughTB/train-tracked-api] setup and running on a publically-accessible server
+- The [Train Tracked API](https://github.com/HughTB/train-tracked-api) setup and running on a publically-accessible server
 
 ### Building
 
