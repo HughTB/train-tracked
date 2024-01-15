@@ -68,7 +68,7 @@ String getNavRoute(int index) {
 // Update interval in minutes
 const updateInterval = 3;
 
-final navigatorKey = GlobalKey<NavigatorState>();
+late GlobalKey<NavigatorState> navigatorKey;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,9 +116,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Lock the app to portrait
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
+    // Set the navigator key for later use
+    navigatorKey = GlobalKey<NavigatorState>();
+
+    // Actually build the app
     return MaterialApp(
       title: 'Train Tracked',
       theme: ThemeData(
@@ -135,6 +141,8 @@ class MyApp extends StatelessWidget {
         "/live-trains": (context) => const ArrDepSearchPage(title: 'Live Trains'),
         "/settings": (context) => const SettingsPage(title: 'Settings'),
       },
+      initialRoute: '/',
+      navigatorKey: navigatorKey,
     );
   }
 }

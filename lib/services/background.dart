@@ -70,7 +70,7 @@ void callbackDispatcher() {
             StoppingPoint updatedSP = updated.stoppingPoints[i];
 
             if (oldSP.cancelledHere != updatedSP.cancelledHere) {
-              notifBody = "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              notifBody = "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
               break;
             }
           }
@@ -85,11 +85,23 @@ void callbackDispatcher() {
 
             if ((updatedSP.ataForecast ?? false) && (oldSP.ata != updatedSP.ata)) {
               final delayedMins = DateTime.tryParse(updatedSP.ata!)!.difference(DateTime.tryParse(updatedSP.sta!)!).inMinutes;
-              notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+
+              if (delayedMins == 0) {
+                notifBody = "Now running on time at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+              } else {
+                notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+              }
+
               break;
             } else if ((updatedSP.atdForecast ?? false) && (oldSP.atd != updatedSP.atd)) {
               final delayedMins = DateTime.tryParse(updatedSP.atd!)!.difference(DateTime.tryParse(updatedSP.std!)!).inMinutes;
-              notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+
+              if (delayedMins == 0) {
+                notifBody = "Now running on time at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+              } else {
+                notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+              }
+
               break;
             }
           }
@@ -103,7 +115,7 @@ void callbackDispatcher() {
             StoppingPoint updatedSP = updated.stoppingPoints[i];
 
             if ((oldSP.platform != updatedSP.platform)) {
-              notifBody = "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}";
+              notifBody = "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}.";
               break;
             }
           }
@@ -115,7 +127,7 @@ void callbackDispatcher() {
             notifId,
             notifTitle,
             notifBody,
-            action: AndroidNotificationAction(service.rid, "openServiceFromNotif"),
+            action: AndroidNotificationAction(service.rid, "More Information", showsUserInterface: true),
           );
         }
       }

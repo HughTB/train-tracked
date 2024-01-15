@@ -1,3 +1,4 @@
+import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:train_tracked/api/api.dart';
@@ -19,21 +20,12 @@ void initNotifications() async {
   const InitializationSettings notifInitSettings = InitializationSettings(
       android: notifSettingsAndroid,
       linux: notifSettingsLinux);
-  await notifications.initialize(notifInitSettings);
 
-  // If we were launched from a notification, push the service view to the navigator
-  final NotificationAppLaunchDetails? appLaunchDetails = await notifications.getNotificationAppLaunchDetails();
-
-  if (appLaunchDetails != null && appLaunchDetails.didNotificationLaunchApp) {
-    if (appLaunchDetails.notificationResponse?.actionId != null) {
-      Service? service = await getServiceDetails(appLaunchDetails.notificationResponse!.actionId!, null);
-      if (service != null) {
-        navigatorKey.currentState?.push(MaterialPageRoute(
-          builder: (context) => ServiceViewPage(service: service, oldService: false)
-        ));
-      }
-    }
-  }
+  await notifications.initialize(
+    notifInitSettings,
+    onDidReceiveNotificationResponse: _onReceiveNotificationResponse,
+    onDidReceiveBackgroundNotificationResponse: _onReceiveNotificationResponse,
+  );
 }
 
 Future<void> getNotificationsPermission() async {
@@ -51,4 +43,17 @@ void sendNotification(int id, String title, String body, {AndroidNotificationAct
   );
   NotificationDetails notifDetails = NotificationDetails(android: androidNotifDetails);
   notifications.show(id, title, body, notifDetails);
+}
+
+void _onReceiveNotificationResponse(NotificationResponse response) async {
+  // Prefer the actionId, otherwise reassemble the first 4 digits of the RID from the date
+  final rid = response.actionId ?? "${DateTime.now().format("Ymd")}${response.id}";
+
+  Service? service = await getServiceDetails(rid, null);
+
+  if (service != null) {
+    navigatorKey.currentState?.push(MaterialPageRoute(
+      builder: (context) => ServiceViewPage(service: service, oldService: true), // Report oldService so we don't make the same request twice
+    ));
+  }
 }

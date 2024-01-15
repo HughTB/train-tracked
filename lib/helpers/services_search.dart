@@ -262,7 +262,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
   if (service == null) { return null; }
 
   // If the service finished more than 24 hours ago, ignore it if oldServices is false
-  bool? thisServiceIsOld = DateTime.tryParse(service.stoppingPoints.last.sta!)?.isBefore(DateTime.now().subtract(const Duration(hours: 24)));
+  bool? thisServiceIsOld = DateTime.tryParse(service.stoppingPoints.last.ata!)?.isBefore(DateTime.now()) ?? false;
   if (thisServiceIsOld != oldServices) { return null; }
   if (thisServiceIsOld == false) {
     service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context));
