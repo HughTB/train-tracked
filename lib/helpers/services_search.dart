@@ -121,11 +121,8 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
             ),
           ),
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => ServiceViewPage(
-                service: service,
-                oldService: false,
-              )
+            navigatorKey.currentState?.push(MaterialPageRoute(
+              builder: (context) => ServiceViewPage(service: service, oldService: false)
             ));
           },
         ),
@@ -298,11 +295,8 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
       ),
     ),
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => ServiceViewPage(
-          service: service!,
-          oldService: thisServiceIsOld ?? true,
-        ),
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => ServiceViewPage(service: service!, oldService: thisServiceIsOld ?? true),
       ));
     },
   );

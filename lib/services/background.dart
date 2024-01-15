@@ -1,4 +1,5 @@
 import 'package:date_time_format/date_time_format.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:train_tracked/helpers/stations_search.dart';
 import 'package:workmanager/workmanager.dart';
@@ -62,40 +63,60 @@ void callbackDispatcher() {
           savedServicesBox.put(updated.rid, updated);
         }
 
-        // Check through each stopping point and only add the item for the first future stopping point with an issue
-        for (int i = 0; (i < service.stoppingPoints.length && i < updated.stoppingPoints.length); i++) {
-          StoppingPoint oldSP = service.stoppingPoints[i];
-          StoppingPoint updatedSP = updated.stoppingPoints[i];
+        // Check through each stopping point for the first new cancellation (in order from origin to destination)
+        if (cancellationNotif) {
+          for (int i = 0; (i < service.stoppingPoints.length && i < updated.stoppingPoints.length); i++) {
+            StoppingPoint oldSP = service.stoppingPoints[i];
+            StoppingPoint updatedSP = updated.stoppingPoints[i];
 
-          if (cancellationNotif) {
-            if ((oldSP.cancelledHere != updatedSP.cancelledHere)) {
-              if (notifBody != "") { notifBody += "\n"; }
-              notifBody += "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+            if (oldSP.cancelledHere != updatedSP.cancelledHere) {
+              notifBody = "Cancelled at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              break;
             }
           }
+        }
 
-          if (delayNotif) {
+        // Check through each stopping point for the first new delay (in order from origin to destination),
+        // only if there have been no cancellations
+        if (delayNotif && notifBody == "") {
+          for (int i = 0; (i < service.stoppingPoints.length && i < updated.stoppingPoints.length); i++) {
+            StoppingPoint oldSP = service.stoppingPoints[i];
+            StoppingPoint updatedSP = updated.stoppingPoints[i];
+
             if ((updatedSP.ataForecast ?? false) && (oldSP.ata != updatedSP.ata)) {
               final delayedMins = DateTime.tryParse(updatedSP.ata!)!.difference(DateTime.tryParse(updatedSP.sta!)!).inMinutes;
-              if (notifBody != "") { notifBody += "\n"; }
-              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              break;
             } else if ((updatedSP.atdForecast ?? false) && (oldSP.atd != updatedSP.atd)) {
               final delayedMins = DateTime.tryParse(updatedSP.atd!)!.difference(DateTime.tryParse(updatedSP.std!)!).inMinutes;
-              if (notifBody != "") { notifBody += "\n"; }
-              notifBody += "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}";
+              break;
             }
           }
+        }
 
-          if (platformChangeNotif) {
+        // Check through each stopping point for the first new platform change (in order from origin to destination),
+        // only if there have been no cancellations or delays
+        if (platformChangeNotif && notifBody == "") {
+          for (int i = 0; (i < service.stoppingPoints.length && i < updated.stoppingPoints.length); i++) {
+            StoppingPoint oldSP = service.stoppingPoints[i];
+            StoppingPoint updatedSP = updated.stoppingPoints[i];
+
             if ((oldSP.platform != updatedSP.platform)) {
-              if (notifBody != "") { notifBody += "\n"; }
-              notifBody += "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}";
+              notifBody = "Platform change at ${getStationByCrs(stations, updatedSP.crs)?.stationName} - Now departing from Platform ${updatedSP.platform}";
+              break;
             }
           }
         }
 
         if (notifBody != "") {
-          sendNotification(notifId, notifTitle, notifBody);
+          notifBody += "\nTap for more details";
+          sendNotification(
+            notifId,
+            notifTitle,
+            notifBody,
+            action: AndroidNotificationAction(service.rid, "openServiceFromNotif"),
+          );
         }
       }
 

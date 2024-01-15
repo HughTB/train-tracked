@@ -75,11 +75,8 @@ Widget getStationWidget(Station station, bool last, BuildContext context) {
       ),
     ),
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => ArrDepPage(
-          title: station.stationName!,
-          crs: station.crs!,
-        ),
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => ArrDepPage(title: station.stationName!, crs: station.crs!)
       ));
     },
   );

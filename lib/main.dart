@@ -68,6 +68,8 @@ String getNavRoute(int index) {
 // Update interval in minutes
 const updateInterval = 3;
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

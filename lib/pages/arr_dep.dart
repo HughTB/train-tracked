@@ -117,8 +117,8 @@ class _ArrDepPageState extends State<ArrDepPage> {
                 indicatorColor: Theme.of(context).colorScheme.inversePrimary,
                 onDestinationSelected: (int index) {
                   if (index != currentNavIndex) {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.pushReplacementNamed(context, getNavRoute(index));
+                    navigatorKey.currentState?.popUntil((route) => route.isFirst);
+                    navigatorKey.currentState?.pushReplacementNamed(getNavRoute(index));
                   }
                 }
             ),
