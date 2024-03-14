@@ -132,6 +132,11 @@ void updateRecentSearches(Station newStation) async {
     oldSearches.add(recentSearchesBox.getAt(i)!);
   }
 
+  if (oldSearches[0] == newStation) { return; }
+  if (oldSearches.contains(newStation)) {
+    oldSearches.remove(newStation);
+  }
+
   oldSearches.insert(0, newStation);
   await recentSearchesBox.clear();
   await recentSearchesBox.addAll(oldSearches);
