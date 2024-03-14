@@ -7,31 +7,36 @@ import '../classes/station.dart';
 List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Function() setStateCallback, BuildContext context, Color textColour) {
   List<Widget> results = [];
 
-  if (searchTerm == null || searchTerm == '') {
-    return [];
-  }
-
-  searchTerm = searchTerm.toLowerCase();
+  searchTerm = searchTerm?.toLowerCase();
 
   List<Station> foundStations = [];
-  List<Station> tempStations = stations.toList();
 
-  if (searchTerm.length <= 3) {
-    for (Station station in stations) {
-      if (foundStations.length > 25) break;
+  if (searchTerm == null || searchTerm.isEmpty) {
+    for (int i = 0; i < recentSearchesBox.length && i <= 25; i++) {
+      if (recentSearchesBox.getAt(i) == null) { continue; }
 
-      if (station.crs!.toLowerCase().contains(searchTerm)) {
-        foundStations.add(station);
-        tempStations.remove(station);
+      foundStations.add(recentSearchesBox.getAt(i)!);
+    }
+  } else {
+    List<Station> tempStations = stations.toList();
+
+    if (searchTerm.length <= 3) {
+      for (Station station in stations) {
+        if (foundStations.length > 25) break;
+
+        if (station.crs!.toLowerCase().contains(searchTerm)) {
+          foundStations.add(station);
+          tempStations.remove(station);
+        }
       }
     }
-  }
 
-  for (Station station in tempStations) {
-    if (foundStations.length > 25) break;
+    for (Station station in tempStations) {
+      if (foundStations.length > 25) break;
 
-    if (station.stationName!.toLowerCase().contains(searchTerm)) {
-      foundStations.add(station);
+      if (station.stationName!.toLowerCase().contains(searchTerm)) {
+        foundStations.add(station);
+      }
     }
   }
 
@@ -75,6 +80,8 @@ Widget getStationWidget(Station station, bool last, Function() callback, BuildCo
       ),
     ),
     onTap: () {
+      updateRecentSearches(station);
+
       navigatorKey.currentState?.push(MaterialPageRoute(
         builder: (context) => ArrDepPage(title: station.stationName!, crs: station.crs!)
       )).then((_) => callback());
@@ -114,4 +121,18 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Fun
   }
 
   return widgets;
+}
+
+void updateRecentSearches(Station newStation) async {
+  List<Station> oldSearches = [];
+
+  for (int i = 0; i < recentSearchesBox.length && i <= 24; i++) {
+    if (recentSearchesBox.getAt(i) == null) { continue; }
+
+    oldSearches.add(recentSearchesBox.getAt(i)!);
+  }
+
+  oldSearches.insert(0, newStation);
+  await recentSearchesBox.clear();
+  await recentSearchesBox.addAll(oldSearches);
 }

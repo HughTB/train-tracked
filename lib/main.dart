@@ -25,6 +25,7 @@ String? stationSearchTerm;
 
 // Hive boxes
 late Box preferencesBox; // Preferences storage
+late Box<Station> recentSearchesBox; // Recent searches storage
 late Box<Station?> savedStationsBox; // Saved stations storage
 late Box<Service?> savedServicesBox;
 
@@ -81,6 +82,7 @@ Future<void> main() async {
 
   // Get hive boxes
   preferencesBox = await Hive.openBox('preferences');
+  recentSearchesBox = await Hive.openBox<Station>('recentSearches');
   savedStationsBox = await Hive.openBox<Station?>('savedStations');
   savedServicesBox = await Hive.openBox<Service?>('savedServices');
 

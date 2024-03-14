@@ -63,12 +63,12 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (BuildContext context, BoxConstraints constraints) {
                 return DropdownSearch<String>(
                   items: homeStationEntries,
-                  popupProps: const PopupProps.menu(
+                  popupProps: const PopupProps.dialog(
                     showSelectedItems: true,
-                    constraints: BoxConstraints(maxHeight: 400),
+                    // constraints: BoxConstraints(maxHeight: 400),
                     searchDelay: Duration(seconds: 0),
                     showSearchBox: true,
-                    searchFieldProps: TextFieldProps(autofocus: true)
+                    searchFieldProps: TextFieldProps(autofocus: true),
                   ),
                   dropdownDecoratorProps: const DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
@@ -82,6 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       savedStationsBox.put("home", getStationByCrs(stations, value?.substring(value.length - 4, value.length - 1)));
                     });
                   },
+                  filterFn: (item, search) { return (item.toLowerCase().contains(search.toLowerCase()) || item.toLowerCase().replaceAll("&", "and").contains(search.toLowerCase())); },
                 );
               },
             ),

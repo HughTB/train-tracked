@@ -20,6 +20,17 @@ class _ArrDepSearchPageState extends State<ArrDepSearchPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_sharp),
+            tooltip: 'Delete Recent Searches',
+            onPressed: () {
+              setState(() {
+                recentSearchesBox.clear();
+              });
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -37,6 +48,7 @@ class _ArrDepSearchPageState extends State<ArrDepSearchPage> {
               child: SearchBar(
                 padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
                 leading: const Icon(Icons.search),
+                autoFocus: true,
                 onChanged: (String? value) {
                   setState(() {
                     stationSearchTerm = value;
