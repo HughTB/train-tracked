@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -93,17 +94,20 @@ Future<void> main() async {
   initNotifications();
   await getNotificationsPermission();
 
-  // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so multiple are needed, starting with an offset
-  Workmanager().initialize(callbackDispatcher);
+  // Only run the background service if the platform is android
+  if (Platform.isAndroid) {
+    // Slightly hacky workaround, but the minimum time for a periodic task is 15 minutes, so multiple are needed, starting with an offset
+    Workmanager().initialize(callbackDispatcher);
 
-  for (int i = 0; i < (15 / updateInterval); i++) {
-    Workmanager().registerPeriodicTask(
-      "tt_service_checker_$i",
-      "service_check",
-      frequency: const Duration(minutes: 15),
-      existingWorkPolicy: ExistingWorkPolicy.replace,
-      initialDelay: Duration(minutes: i * (15 ~/ updateInterval))
-    );
+    for (int i = 0; i < (15 / updateInterval); i++) {
+      Workmanager().registerPeriodicTask(
+          "tt_service_checker_$i",
+          "service_check",
+          frequency: const Duration(minutes: 15),
+          existingWorkPolicy: ExistingWorkPolicy.replace,
+          initialDelay: Duration(minutes: i * (15 ~/ updateInterval))
+      );
+    }
   }
 
   runApp(MyApp());

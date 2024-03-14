@@ -24,14 +24,14 @@ const List<Station> stations = [
 for station in stations:
     generated_file += f"  Station(\"{station[0]}\", {station[1]}, {station[2]}, \"{station[3]}\"),\n"
 
-generated_file += '];'
+generated_file += '];\n'
 
 generated_file += """
-const List<DropdownMenuEntry> homeStationEntries = [
+const List<String> homeStationEntries = [
 """
 
 for station in stations:
-    generated_file += f"  DropdownMenuEntry(value: \"{station[3]}\", label: \"{station[0]} ({station[3]})\"),\n"
+    generated_file += f"  \"{station[0]} ({station[3]})\",\n"
 
 generated_file += '];'
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:dropdown_search/dropdown_search.dart';
+
 import '../main.dart';
 import '../helpers/stations_search.dart';
 import '../classes/station_list.g.dart';
@@ -59,18 +61,25 @@ class _SettingsPageState extends State<SettingsPage> {
             Divider(color: Theme.of(context).canvasColor),
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                return DropdownMenu(
-                  label: const Text('Home Station'),
-                  dropdownMenuEntries: homeStationEntries,
-                  width: constraints.maxWidth,
-                  initialSelection: savedStationsBox.get("home")?.crs,
-                  requestFocusOnTap: true,
-                  enableFilter: true,
-                  enableSearch: true,
-                  menuHeight: 200,
-                  onSelected: (dynamic value) {
+                return DropdownSearch<String>(
+                  items: homeStationEntries,
+                  popupProps: const PopupProps.menu(
+                    showSelectedItems: true,
+                    constraints: BoxConstraints(maxHeight: 400),
+                    searchDelay: Duration(seconds: 0),
+                    showSearchBox: true,
+                    searchFieldProps: TextFieldProps(autofocus: true)
+                  ),
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      label: Text('Home Station'),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  selectedItem: savedStationsBox.get("home") == null ? null : "${savedStationsBox.get("home")?.stationName} (${savedStationsBox.get("home")?.crs})",
+                  onChanged: (String? value) {
                     setState(() {
-                      savedStationsBox.put("home", getStationByCrs(stations, value));
+                      savedStationsBox.put("home", getStationByCrs(stations, value?.substring(value.length - 4, value.length - 1)));
                     });
                   },
                 );

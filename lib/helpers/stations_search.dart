@@ -4,7 +4,7 @@ import '../main.dart';
 import '../pages/arr_dep.dart';
 import '../classes/station.dart';
 
-List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, BuildContext context, Color textColour) {
+List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Function() setStateCallback, BuildContext context, Color textColour) {
   List<Widget> results = [];
 
   if (searchTerm == null || searchTerm == '') {
@@ -36,7 +36,7 @@ List<Widget> updateStationsSearch(List<Station> stations, String? searchTerm, Bu
   }
 
   for (int i = 0; i < foundStations.length; i++) {
-    results.add(getStationWidget(foundStations[i], i == (foundStations.length - 1), context));
+    results.add(getStationWidget(foundStations[i], i == (foundStations.length - 1), setStateCallback, context));
   }
 
   return results;
@@ -54,7 +54,7 @@ Station? getStationByCrs(List<Station> stations, String? crs) {
   return null;
 }
 
-Widget getStationWidget(Station station, bool last, BuildContext context) {
+Widget getStationWidget(Station station, bool last, Function() callback, BuildContext context) {
   return InkWell(
     borderRadius: const BorderRadius.all(Radius.circular(10)),
     child: DecoratedBox(
@@ -77,12 +77,12 @@ Widget getStationWidget(Station station, bool last, BuildContext context) {
     onTap: () {
       navigatorKey.currentState?.push(MaterialPageRoute(
         builder: (context) => ArrDepPage(title: station.stationName!, crs: station.crs!)
-      ));
+      )).then((_) => callback());
     },
   );
 }
 
-List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, BuildContext context) {
+List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Function() setStateCallback, BuildContext context) {
   List<Widget> widgets = [];
 
   if (home == null) {
@@ -104,12 +104,12 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Bui
       )
     ));
   } else {
-    widgets.add(getStationWidget(home, stations.length == 1, context));
+    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context));
   }
 
   for (int i = 0; i < stations.length; i++) {
     if (stations[i] != home && stations[i] != null) {
-      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), context));
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context));
     }
   }
 

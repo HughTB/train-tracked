@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:train_tracked/api/api.dart';
 
@@ -43,28 +42,38 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
             title: Text("to ${getStationByCrs(stations, (service.stoppingPoints.isEmpty) ? service.destination.first : (service.stoppingPoints.last.crs))?.stationName}"),
             actions: [
               IconButton(
-                  icon: (savedServicesBox.get(service.rid) != null) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
-                  tooltip: 'Save Service',
-                  onPressed: () async {
-                    if (savedServicesBox.get(service.rid) == null) {
-                      service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context)) ?? service;
-                    }
-                    setState(() {
-                      if (savedServicesBox.get(service.rid) != null) {
-                        savedServicesBox.put(service.rid, null);
-                      } else {
-                        savedServicesBox.put(service.rid, service);
-                      }
-                    });
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Refresh Page',
+                onPressed: () {
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: (savedServicesBox.get(service.rid) != null) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
+                tooltip: 'Save Service',
+                onPressed: () async {
+                  if (savedServicesBox.get(service.rid) == null) {
+                    service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context)) ?? service;
                   }
-              )
+                  setState(() {
+                    if (savedServicesBox.get(service.rid) != null) {
+                      savedServicesBox.put(service.rid, null);
+                    } else {
+                      savedServicesBox.put(service.rid, service);
+                    }
+                  });
+                }
+              ),
             ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(10),
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: (serviceView.data == null) ? [] : serviceView.data!,
+            child: RefreshIndicator(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: (serviceView.data == null) ? [] : serviceView.data!,
+              ),
+              onRefresh: () async { setState(() {}); },
             ),
           ),
           bottomNavigationBar: NavigationBar(

@@ -13,7 +13,7 @@ const Color onTimeColour = Colors.lightGreen;
 const Color delayedColour = Colors.orange;
 const Color cancelledColour = Colors.red;
 
-Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext context) async {
+Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback, BuildContext context) async {
   List<Widget> cards = [];
   List<Service>? services;
 
@@ -123,7 +123,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, BuildContext contex
           onTap: () {
             navigatorKey.currentState?.push(MaterialPageRoute(
               builder: (context) => ServiceViewPage(service: service, oldService: false)
-            ));
+            )).then((_) => callback());
           },
         ),
       )
@@ -257,7 +257,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   return widgets;
 }
 
-Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool last, BuildContext context) async {
+Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool last, Function() callback, BuildContext context) async {
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
 
@@ -296,20 +296,20 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
     ),
     onTap: () {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => ServiceViewPage(service: service!, oldService: thisServiceIsOld ?? true),
-      ));
+        builder: (context) => ServiceViewPage(service: service!, oldService: thisServiceIsOld),
+      )).then((_) => callback());
     },
   );
 }
 
-Future<List<Widget>> getSavedServices(bool oldServices, BuildContext context) async {
+Future<List<Widget>> getSavedServices(bool oldServices, Function() setStateCallback, BuildContext context) async {
   List<Widget> widgets = [];
 
   for (int i = 0; i < savedServicesBox.length; i++) {
     String rid = savedServicesBox.keys.toList()[i];
 
     if (savedServicesBox.get(rid) != null) {
-      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, i == (savedServicesBox.length - 1), context);
+      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, i == (savedServicesBox.length - 1), setStateCallback, context);
 
       if (serviceWidget != null) {
         widgets.add(serviceWidget);

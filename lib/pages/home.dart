@@ -18,8 +18,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait([
-        getSavedServices(false, context),
-        getSavedServices(true, context),
+        getSavedServices(false, () { setState(() {}); }, context),
+        getSavedServices(true, () { setState(() {}); }, context),
       ]),
       initialData: const [
         <Widget>[Text("Loading...")],
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
-                ] + getSavedStationsWidgets(savedStationsBox.get("home"), savedStationsBox.values.toList(), context) + [
+                ] + getSavedStationsWidgets(savedStationsBox.get("home"), savedStationsBox.values.toList(), () { setState(() {}); }, context) + [
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),

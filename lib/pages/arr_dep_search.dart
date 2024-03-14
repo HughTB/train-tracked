@@ -27,7 +27,7 @@ class _ArrDepSearchPageState extends State<ArrDepSearchPage> {
             padding: const EdgeInsets.all(10),
             child: ListView(
               physics: const BouncingScrollPhysics(),
-              children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, context, Theme.of(context).colorScheme.inverseSurface),
+              children: <Widget>[const SizedBox(height: 64)] + updateStationsSearch(stations, stationSearchTerm, () { setState(() {}); }, context, Theme.of(context).colorScheme.inverseSurface),
             ),
           ),
           Align(
