@@ -86,8 +86,18 @@ class _ArrDepPageState extends State<ArrDepPage> {
                     setState(() {
                       if (savedStationsBox.containsKey(crs)) {
                         savedStationsBox.delete(crs);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Removed ${getStationByCrs(stations, crs)?.stationName} from favorite stations"),
+                          ),
+                        );
                       } else {
                         savedStationsBox.put(crs, getStationByCrs(stations, crs));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Added ${getStationByCrs(stations, crs)?.stationName} to favorite stations"),
+                          ),
+                        );
                       }
                     });
                   }

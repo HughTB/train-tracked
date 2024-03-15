@@ -58,8 +58,18 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
                   setState(() {
                     if (savedServicesBox.get(service.rid) != null) {
                       savedServicesBox.put(service.rid, null);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Removed from saved services"),
+                        ),
+                      );
                     } else {
                       savedServicesBox.put(service.rid, service);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Added to saved services"),
+                        ),
+                      );
                     }
                   });
                 }
