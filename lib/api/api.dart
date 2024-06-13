@@ -14,7 +14,10 @@ import 'api_settings.dart';
 Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
-      Uri.parse("$apiEndpoint/details?rid=$rid&token=$apiToken"),
+      Uri.parse("$apiEndpoint/details?rid=$rid"),
+      headers: {
+        "x-api-key": apiToken,
+      }
     );
 
     if (response.statusCode == 200) {
@@ -48,7 +51,10 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger
 Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
-      Uri.parse("$apiEndpoint/departures?crs=$crs&token=$apiToken"),
+      Uri.parse("$apiEndpoint/departures?crs=$crs"),
+      headers: {
+        "x-api-key": apiToken,
+      }
     );
 
     if (response.statusCode == 200) {
@@ -88,7 +94,10 @@ Future<List<Service>?> getDepartures(String crs, ScaffoldMessengerState? messeng
 Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState? messenger) async {
   try {
     final response = await http.get(
-      Uri.parse("$apiEndpoint/arrivals?crs=$crs&token=$apiToken"),
+      Uri.parse("$apiEndpoint/arrivals?crs=$crs"),
+      headers: {
+        "x-api-key": apiToken,
+      }
     );
 
     if (response.statusCode == 200) {
