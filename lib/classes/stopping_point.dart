@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-import 'station.dart';
-
 part 'stopping_point.g.dart';
 
 @HiveType(typeId: 1)

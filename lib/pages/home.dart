@@ -20,10 +20,12 @@ class _HomePageState extends State<HomePage> {
       future: Future.wait([
         getSavedServices(false, () { setState(() {}); }, context),
         getSavedServices(true, () { setState(() {}); }, context),
+        getSavedStationsDisruptions(savedStationsBox.get("home"), savedStationsBox.values.toList(), () { setState(() {}); }, context),
       ]),
-      initialData: const [
-        <Widget>[Text("Loading...")],
-        <Widget>[Text("Loading...")],
+      initialData: [
+        const <Widget>[Text("Loading...")],
+        const <Widget>[Text("Loading...")],
+        getSavedStationsWidgets(savedStationsBox.get("home"), savedStationsBox.values.toList(), () { setState(() {}); }, context),
       ],
       builder: (BuildContext context, AsyncSnapshot<List<List<Widget>>> futures) {
         return Scaffold(
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
-                ] + getSavedStationsWidgets(savedStationsBox.get("home"), savedStationsBox.values.toList(), () { setState(() {}); }, context) + [
+                ] + ((futures.data?[2] == null) ? [] : futures.data![2]) + [
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),

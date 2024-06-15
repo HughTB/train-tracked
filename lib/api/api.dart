@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../classes/service.dart';
+import '../classes/disruption.dart';
 
 // This file literally contains two definitions
 // const String apiEndpoint = "";
@@ -121,6 +122,64 @@ Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState? messenger
       const SnackBar(
         content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
       )
+    );
+  } on Exception catch (e) {
+    log(e.toString());
+    messenger?.showSnackBar(
+        SnackBar(
+          content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
+        )
+    );
+  }
+
+  return null;
+}
+
+Future<Map<String, List<Disruption>>?> getDisruptions(List<String> crsList, ScaffoldMessengerState? messenger) async {
+  try {
+    String crsListString = "";
+    for (int i = 0; i < crsList.length; i++) {
+      crsListString += crsList[i] + ((i == crsList.length - 1) ? "" : ",");
+    }
+
+    final response = await http.get(
+        Uri.parse("$apiEndpoint/disruptions?crs=$crsListString"),
+        headers: {
+          "x-api-key": apiToken,
+        }
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, List<Disruption>>? disruptions = {};
+      final result = jsonDecode(response.body)['disruptions'];
+
+      // for (String crs in crsList) {
+      //   disruptions[crs] = result[crs].map((Map<String, dynamic> input) => Disruption.fromJson(input));
+      // }
+      for (String crs in crsList) {
+        List<Disruption> thisDisruptions = [];
+
+        for (dynamic item in result[crs]) {
+          thisDisruptions.add(Disruption.fromJson(item));
+        }
+
+        disruptions[crs] = thisDisruptions;
+      }
+
+      return disruptions;
+    } else {
+      messenger?.showSnackBar(
+          SnackBar(
+            content: Text("${response.statusCode}: ${response.reasonPhrase}"),
+          )
+      );
+    }
+  } on SocketException catch (e) {
+    log(e.toString());
+    messenger?.showSnackBar(
+        const SnackBar(
+          content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
+        )
     );
   } on Exception catch (e) {
     log(e.toString());

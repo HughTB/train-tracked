@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:train_tracked/api/api.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
+import '../classes/disruption.dart';
 import '../main.dart';
 import '../pages/arr_dep.dart';
 import '../classes/station.dart';
@@ -59,7 +63,7 @@ Station? getStationByCrs(List<Station> stations, String? crs) {
   return null;
 }
 
-Widget getStationWidget(Station station, bool last, Function() callback, BuildContext context) {
+Widget getStationWidget(Station station, bool last, Function() callback, BuildContext context, {bool hasDisruption = false}) {
   return InkWell(
     borderRadius: const BorderRadius.all(Radius.circular(10)),
     child: DecoratedBox(
@@ -73,10 +77,24 @@ Widget getStationWidget(Station station, bool last, Function() callback, BuildCo
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Text(
-          "${station.stationName} (${station.crs})",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                "${station.stationName} (${station.crs})",
+                style: Theme.of(context).textTheme.bodyLarge,
+              )
+            ),
+            Icon(
+              Icons.warning_sharp,
+              size: (hasDisruption) ? null : 0,
+              color: delayedColour,
+            ),
+            const Icon(
+              Icons.arrow_right_sharp,
+            )
+          ],
+        )
       ),
     ),
     onTap: () {
@@ -89,7 +107,7 @@ Widget getStationWidget(Station station, bool last, Function() callback, BuildCo
   );
 }
 
-List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Function() setStateCallback, BuildContext context) {
+List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Function() setStateCallback, BuildContext context, {Map<String, List<Disruption>>? disruptions}) {
   List<Widget> widgets = [];
 
   if (home == null) {
@@ -111,16 +129,26 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Fun
       )
     ));
   } else {
-    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context));
+    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, hasDisruption: (disruptions?[home.crs]?.isNotEmpty) ?? false));
   }
 
   for (int i = 0; i < stations.length; i++) {
     if (stations[i] != home && stations[i] != null) {
-      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context));
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, hasDisruption: (disruptions?[stations[i]?.crs!]?.isNotEmpty) ?? false));
     }
   }
 
   return widgets;
+}
+
+Future<List<Widget>> getSavedStationsDisruptions(Station? home, List<Station?> stations, Function() setStateCallback, BuildContext context) async {
+  List<String> crsList = [];
+  if (home != null) { crsList.add(home.crs!); }
+  for (Station? station in stations) { if (station != null) { crsList.add(station.crs!); }}
+
+  Map<String, List<Disruption>>? disruptions = await getDisruptions(crsList, ScaffoldMessenger.of(context));
+
+  return getSavedStationsWidgets(home, stations, setStateCallback, context, disruptions: disruptions);
 }
 
 void updateRecentSearches(Station newStation) async {
@@ -140,4 +168,78 @@ void updateRecentSearches(Station newStation) async {
   oldSearches.insert(0, newStation);
   await recentSearchesBox.clear();
   await recentSearchesBox.addAll(oldSearches);
+}
+
+Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallback, BuildContext context) async {
+  if (crs == null) { return []; }
+
+  Map<String, List<Disruption>>? disruptions = await getDisruptions([crs], ScaffoldMessenger.of(context));
+
+  if (disruptions != null && (disruptions[crs]?.isNotEmpty ?? false)) {
+    List<Widget> cards = [];
+
+    for (Disruption disruption in disruptions[crs]!) {
+      Color disruptionColour = Theme.of(context).colorScheme.inverseSurface;
+      String disruptionTitle = "";
+
+      switch (disruption.severity) {
+        case "Minor":
+          disruptionColour = delayedColour;
+          disruptionTitle = "Minor disruption to";
+          break;
+        case "Major":
+          disruptionTitle = "Major disruption to";
+        case "Severe":
+          disruptionColour = cancelledColour;
+          disruptionTitle = "Severe disruption to";
+          break;
+        case "Normal":
+        default:
+          disruptionColour = Theme.of(context).colorScheme.inverseSurface;
+          disruptionTitle = "Info about";
+          break;
+      }
+
+      disruptionTitle += " ${disruption.category}:";
+
+      cards.add(Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children:[
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(
+                  Icons.warning_sharp,
+                  color: disruptionColour,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      disruptionTitle,
+                      style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                        color: disruptionColour,
+                      ),
+                    ),
+                    HtmlWidget(
+                      disruption.message ?? "",
+                      onTapUrl: (url) => launchUrlString(url),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+
+    return cards;
+  }
+
+  return [];
 }

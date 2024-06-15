@@ -9,10 +9,6 @@ import 'stations_search.dart';
 import '../classes/station_list.g.dart';
 import '../classes/stopping_point.dart';
 
-const Color onTimeColour = Colors.lightGreen;
-const Color delayedColour = Colors.orange;
-const Color cancelledColour = Colors.red;
-
 Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback, BuildContext context) async {
   List<Widget> cards = [];
   List<Service>? services;
@@ -284,13 +280,20 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Text(
-          "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('d/m/Y')} - "
-              "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
-              "(${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')}) "
-              "to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName} "
-              "(${DateTime.tryParse(service.stoppingPoints.last.sta!)?.format('H:i')})",
-          style: Theme.of(context).textTheme.bodyLarge,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('d/m/Y')} - "
+                    "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
+                    "(${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')}) "
+                    "to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName} "
+                    "(${DateTime.tryParse(service.stoppingPoints.last.sta!)?.format('H:i')})",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            const Icon(Icons.arrow_right_sharp),
+          ],
         ),
       ),
     ),

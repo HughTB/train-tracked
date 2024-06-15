@@ -42,6 +42,7 @@ class _ArrDepPageState extends State<ArrDepPage> {
         future: Future.wait([
           getLiveCards(crs, false, () { setState(() {}); }, context),
           getLiveCards(crs, true, () { setState(() {}); }, context),
+          getDisruptionWidget(crs, () { setState(() {}); }, context),
         ]),
         initialData: [
           <Widget>[Container(
@@ -58,8 +59,9 @@ class _ArrDepPageState extends State<ArrDepPage> {
               color: Theme.of(context).primaryColor,
             ),
           )],
+          const <Widget>[],
         ],
-        builder: (BuildContext context, AsyncSnapshot<List<List<Widget>>> liveCards) {
+        builder: (BuildContext context, AsyncSnapshot<List<List<Widget>>> futures) {
           final tabController = DefaultTabController.of(context);
           tabController.addListener(() {
             arrivals = tabController.index == 1;
@@ -117,7 +119,7 @@ class _ArrDepPageState extends State<ArrDepPage> {
                   child: RefreshIndicator(
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
-                      children: liveCards.data?[0] ?? const <Widget>[Text("Failed to load services...")],
+                      children: <Widget>[] + (futures.data?[2] ?? const <Widget>[]) + (futures.data?[0] ?? const <Widget>[Text("Failed to load services...")]),
                     ),
                     onRefresh: () async { setState(() {}); },
                   ),
@@ -127,7 +129,7 @@ class _ArrDepPageState extends State<ArrDepPage> {
                   child: RefreshIndicator(
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
-                      children: liveCards.data?[1] ?? const <Widget>[Text("Failed to load services...")],
+                      children: <Widget>[] + (futures.data?[2] ?? const <Widget>[]) + (futures.data?[1] ?? const <Widget>[Text("Failed to load services...")]),
                     ),
                     onRefresh: () async { setState(() {}); },
                   ),

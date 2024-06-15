@@ -23,6 +23,11 @@ import 'services/background.dart';
 // Current LiveDeparturesPage search term
 String? stationSearchTerm;
 
+// Statically defined colours
+const Color onTimeColour = Colors.lightGreen;
+const Color delayedColour = Colors.orange;
+const Color cancelledColour = Colors.red;
+
 // Hive boxes
 late Box preferencesBox; // Preferences storage
 late Box<Station> recentSearchesBox; // Recent searches storage
