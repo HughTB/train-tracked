@@ -76,8 +76,8 @@ class _ArrDepPageState extends State<ArrDepPage> {
                   },
                 ),
                 IconButton(
-                  icon: (savedStationsBox.containsKey(crs) || savedStationsBox.get("home")?.crs == crs) ? const Icon(Icons.star) : const Icon(Icons.star_border),
-                  tooltip: 'Favourite Station',
+                  icon: (savedStationsBox.get("home")?.crs == crs) ? const Icon(Icons.home) : (savedStationsBox.containsKey(crs)) ? const Icon(Icons.star) : const Icon(Icons.star_border),
+                  tooltip: (savedStationsBox.get("home")?.crs == crs) ? 'This is your Home Station' : 'Favourite Station',
                   onPressed: () {
                     if (savedStationsBox.get("home")?.crs == crs) { return; }
 

@@ -78,7 +78,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   selectedItem: savedStationsBox.get("home") == null ? null : "${savedStationsBox.get("home")?.stationName} (${savedStationsBox.get("home")?.crs})",
                   onChanged: (String? value) {
                     setState(() {
-                      savedStationsBox.put("home", getStationByCrs(stations, value?.substring(value.length - 4, value.length - 1)));
+                      String? crs = value?.substring(value.length - 4, value.length - 1);
+                      savedStationsBox.put("home", getStationByCrs(stations, crs));
+                      if (savedStationsBox.containsKey(crs)) {
+                        savedStationsBox.delete(crs);
+                      }
                     });
                   },
                   filterFn: (item, search) { return (item.toLowerCase().contains(search.toLowerCase()) || item.toLowerCase().replaceAll("&", "and").contains(search.toLowerCase())); },

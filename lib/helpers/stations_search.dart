@@ -146,7 +146,10 @@ Future<List<Widget>> getSavedStationsDisruptions(Station? home, List<Station?> s
   if (home != null) { crsList.add(home.crs!); }
   for (Station? station in stations) { if (station != null) { crsList.add(station.crs!); }}
 
-  Map<String, List<Disruption>>? disruptions = await getDisruptions(crsList, ScaffoldMessenger.of(context));
+  late Map<String, List<Disruption>>? disruptions;
+
+  if (crsList.isNotEmpty) { disruptions = await getDisruptions(crsList, ScaffoldMessenger.of(context)); }
+  else { disruptions = null; }
 
   return getSavedStationsWidgets(home, stations, setStateCallback, context, disruptions: disruptions);
 }
@@ -160,9 +163,13 @@ void updateRecentSearches(Station newStation) async {
     oldSearches.add(recentSearchesBox.getAt(i)!);
   }
 
-  if (oldSearches.isNotEmpty && oldSearches[0] == newStation) { return; }
-  if (oldSearches.contains(newStation)) {
-    oldSearches.remove(newStation);
+  final temp = oldSearches.toList();
+
+  if (oldSearches.isNotEmpty && oldSearches[0].crs == newStation.crs) { return; }
+  for (Station oldStation in temp) {
+    if (oldStation.crs == newStation.crs) {
+      oldSearches.remove(oldStation);
+    }
   }
 
   oldSearches.insert(0, newStation);

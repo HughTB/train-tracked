@@ -66,6 +66,7 @@ String getNavRoute(int index) {
     case 0:
       return '/';
     case 1:
+      stationSearchTerm = null; // Clear the search term (I can't find a way to do this only when that screen loads)
       return '/live-trains';
     case 2:
       return '/settings';
