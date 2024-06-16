@@ -30,7 +30,6 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AsyncSnapshot<List<List<Widget>>> futures) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: Text(widget.title),
           ),
           body: Center(
@@ -47,7 +46,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ] + ((futures.data?[2] == null) ? [] : futures.data![2]) + [
-                  const Divider(),
+                  const Divider(
+                    thickness: 0.5,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
@@ -56,7 +57,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ] + ((futures.data?[0] == null) ? [] : futures.data![0]) + [
-                  const Divider(),
+                  const Divider(
+                    thickness: 0.5,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
@@ -71,7 +74,6 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: NavigationBar(
               destinations: navBarItems,
               selectedIndex: currentNavIndex,
-              indicatorColor: Theme.of(context).colorScheme.inversePrimary,
               onDestinationSelected: (int index) {
                 if (index != currentNavIndex) {
                   navigatorKey.currentState?.popUntil((route) => route.isFirst);

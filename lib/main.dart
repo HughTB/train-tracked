@@ -9,6 +9,8 @@ import 'classes/service.dart';
 import 'classes/station.dart';
 import 'classes/stopping_point.dart';
 
+import 'classes/style_data.dart';
+
 // Import pages from other files
 import 'pages/home.dart';
 import 'pages/arr_dep_search.dart';
@@ -32,23 +34,23 @@ const Color cancelledColour = Colors.red;
 late Box preferencesBox; // Preferences storage
 late Box<Station> recentSearchesBox; // Recent searches storage
 late Box<Station?> savedStationsBox; // Saved stations storage
-late Box<Service?> savedServicesBox;
+late Box<Service?> savedServicesBox; // Saved services storage
 
 // Nav bar items to show at the bottom of all screens
 const List<NavigationDestination> navBarItems = <NavigationDestination>[
   NavigationDestination(
     icon: Icon(Icons.home_outlined),
-    selectedIcon: Icon(Icons.home),
+    selectedIcon: Icon(Icons.home, color: Color(0xFFFFFFFF)),
     label: 'Home',
   ),
   NavigationDestination(
     icon: Icon(Icons.train_outlined),
-    selectedIcon: Icon(Icons.train),
+    selectedIcon: Icon(Icons.train, color: Color(0xFFFFFFFF)),
     label: 'Live Trains',
   ),
   NavigationDestination(
     icon: Icon(Icons.settings_outlined),
-    selectedIcon: Icon(Icons.settings),
+    selectedIcon: Icon(Icons.settings, color: Color(0xFFFFFFFF)),
     label: 'Settings',
   ),
 ];
@@ -138,14 +140,8 @@ class MyApp extends StatelessWidget {
     // Actually build the app
     return MaterialApp(
       title: 'Train Tracked',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8635E3), brightness: Brightness.light),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8635E3), brightness: Brightness.dark),
-        useMaterial3: true,
-      ),
+      theme: StyleData.light,
+      darkTheme: StyleData.dark,
       themeMode: themeMode, // Follow system theme
       home: const HomePage(title: 'Home'),
       routes: <String, WidgetBuilder>{

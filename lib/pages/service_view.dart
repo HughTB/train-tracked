@@ -38,7 +38,6 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
       builder: (BuildContext context, AsyncSnapshot<List<Widget>> serviceView) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: Text("to ${getStationByCrs(stations, (service.stoppingPoints.isEmpty) ? service.destination.first : (service.stoppingPoints.last.crs))?.stationName}"),
             actions: [
               IconButton(
@@ -89,7 +88,6 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
           bottomNavigationBar: NavigationBar(
               destinations: navBarItems,
               selectedIndex: currentNavIndex,
-              indicatorColor: Theme.of(context).colorScheme.inversePrimary,
               onDestinationSelected: (int index) {
                 if (index != currentNavIndex) {
                   navigatorKey.currentState?.popUntil((route) => route.isFirst);
