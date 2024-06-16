@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:workmanager/workmanager.dart';
 
 // Import classes for hive boxes
@@ -35,6 +36,9 @@ late Box preferencesBox; // Preferences storage
 late Box<Station> recentSearchesBox; // Recent searches storage
 late Box<Station?> savedStationsBox; // Saved stations storage
 late Box<Service?> savedServicesBox; // Saved services storage
+
+// Package info
+late PackageInfo packageInfo;
 
 // Nav bar items to show at the bottom of all screens
 const List<NavigationDestination> navBarItems = <NavigationDestination>[
@@ -119,6 +123,8 @@ Future<void> main() async {
       );
     }
   }
+
+  packageInfo = await PackageInfo.fromPlatform();
 
   runApp(MyApp());
 }

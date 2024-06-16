@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../main.dart';
 import '../helpers/stations_search.dart';
@@ -99,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 }
             ),
-            const Divider(),
+            const Divider(thickness: 0.5),
             Text(
               'Notifications',
               style: Theme.of(context).textTheme.headlineSmall,
@@ -134,9 +135,27 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 }
             ),
-            const Divider(),
+            const Divider(thickness: 0.5),
+            Text(
+              'Information',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              "App Version: ${packageInfo.version}\n"
+                  "Build Number: ${(packageInfo.buildNumber == "") ? "unknown" : packageInfo.buildNumber}\n"
+                  "Bundle Name: ${packageInfo.packageName}\n"
+                  "Installed From: ${packageInfo.installerStore}",
+            ),
+            HtmlWidget(
+              "Any bugs or issues? Send an email to <a href=\"mailto:bug-hunt@train-tracked.com\">bug-hunt@train-tracked.com</a>",
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Text(
+              "© Hugh Baldwin, ${DateTime.now().year}",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
               child: Image.asset(
                 (Theme.of(context).brightness == Brightness.dark) ? "assets/powered_by_nre_white.png" : "assets/powered_by_nre_black.png",
                 fit: BoxFit.contain,

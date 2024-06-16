@@ -63,7 +63,7 @@ Station? getStationByCrs(List<Station> stations, String? crs) {
   return null;
 }
 
-Widget getStationWidget(Station station, bool last, Function() callback, BuildContext context, {bool hasDisruption = false}) {
+Widget getStationWidget(Station station, bool last, Function() callback, BuildContext context, {Disruption? disruption, bool isHome = false}) {
   return InkWell(
     borderRadius: const BorderRadius.all(Radius.circular(10)),
     child: DecoratedBox(
@@ -86,9 +86,16 @@ Widget getStationWidget(Station station, bool last, Function() callback, BuildCo
               )
             ),
             Icon(
-              Icons.warning_sharp,
-              size: (hasDisruption) ? null : 0,
-              color: delayedColour,
+              (disruption?.severity == "Normal") ? Icons.info_outline : Icons.warning_sharp,
+              size: (disruption == null) ? 0 : null,
+              color: getDisruptionColour(disruption, context),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: (isHome) ? 5.0 : 0.0),
+              child: Icon(
+                Icons.home,
+                size: (isHome) ? null : 0,
+              ),
             ),
             const Icon(
               Icons.arrow_right_sharp,
@@ -129,12 +136,12 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Fun
       )
     ));
   } else {
-    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, hasDisruption: (disruptions?[home.crs]?.isNotEmpty) ?? false));
+    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, disruption: (disruptions?[home.crs]?.lastOrNull), isHome: true));
   }
 
   for (int i = 0; i < stations.length; i++) {
     if (stations[i] != home && stations[i] != null) {
-      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, hasDisruption: (disruptions?[stations[i]?.crs!]?.isNotEmpty) ?? false));
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, disruption: (disruptions?[stations[i]?.crs!]?.lastOrNull)));
     }
   }
 
@@ -177,6 +184,35 @@ void updateRecentSearches(Station newStation) async {
   await recentSearchesBox.addAll(oldSearches);
 }
 
+Color getDisruptionColour(Disruption? disruption, BuildContext context) {
+  if (disruption == null) { return Theme.of(context).colorScheme.inverseSurface; }
+  switch (disruption.severity) {
+    case "Minor":
+      return delayedColour;
+    case "Major":
+    case "Severe":
+      return cancelledColour;
+    case "Normal":
+    default:
+      return Theme.of(context).colorScheme.inverseSurface;
+  }
+}
+
+String getDisruptionPrefix(Disruption? disruption, BuildContext context) {
+  if (disruption == null) { return "Info about"; }
+  switch (disruption.severity) {
+    case "Minor":
+      return "Minor disruption to";
+    case "Major":
+      return "Major disruption to";
+    case "Severe":
+      return "Severe disruption to";
+    case "Normal":
+    default:
+      return "Info about";
+  }
+}
+
 Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallback, BuildContext context) async {
   if (crs == null) { return []; }
 
@@ -186,28 +222,8 @@ Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallbac
     List<Widget> cards = [];
 
     for (Disruption disruption in disruptions[crs]!) {
-      Color disruptionColour = Theme.of(context).colorScheme.inverseSurface;
-      String disruptionTitle = "";
-
-      switch (disruption.severity) {
-        case "Minor":
-          disruptionColour = delayedColour;
-          disruptionTitle = "Minor disruption to";
-          break;
-        case "Major":
-          disruptionTitle = "Major disruption to";
-        case "Severe":
-          disruptionColour = cancelledColour;
-          disruptionTitle = "Severe disruption to";
-          break;
-        case "Normal":
-        default:
-          disruptionColour = Theme.of(context).colorScheme.inverseSurface;
-          disruptionTitle = "Info about";
-          break;
-      }
-
-      disruptionTitle += " ${disruption.category}:";
+      Color disruptionColour = getDisruptionColour(disruption, context);
+      String disruptionText = "${getDisruptionPrefix(disruption, context)} ${disruption.category}:";
 
       cards.add(Card(
         child: Padding(
@@ -217,7 +233,7 @@ Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallbac
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Icon(
-                  Icons.warning_sharp,
+                  (disruption.severity == "Normal") ? Icons.info_outline : Icons.warning_sharp,
                   color: disruptionColour,
                 ),
               ),
@@ -226,7 +242,7 @@ Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallbac
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      disruptionTitle,
+                      disruptionText,
                       style: TextStyle(
                         fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
                         color: disruptionColour,
