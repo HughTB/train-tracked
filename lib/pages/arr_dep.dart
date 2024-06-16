@@ -25,9 +25,7 @@ class _ArrDepPageState extends State<ArrDepPage> {
   _ArrDepPageState(this.crs);
 
   void refreshCards() {
-    setState(() {
-      liveCardsFuture = updateCards();
-    });
+    liveCardsFuture = updateCards();
   }
 
   Future<List<Widget>> updateCards() async {
@@ -65,7 +63,6 @@ class _ArrDepPageState extends State<ArrDepPage> {
           final tabController = DefaultTabController.of(context);
           tabController.addListener(() {
             arrivals = tabController.index == 1;
-            refreshCards();
           });
           return Scaffold(
             appBar: AppBar(
