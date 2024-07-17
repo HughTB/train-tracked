@@ -43,11 +43,13 @@ void callbackDispatcher() {
       for (Service? service in savedServices) {
         // If the service doesn't exist, skip it
         if (service == null) { continue; }
+        // If updates are stopped for a service, skip it
+        if (service.getUpdates == false) { continue; }
         // If the service arrived before now, there's no point doing anything with it
         if (DateTime.tryParse(service.stoppingPoints.last.ata!)?.isBefore(DateTime.now()) ?? false) { continue; }
 
         // Only do this parsing once
-        int notifId = int.parse(service.rid.substring(8));
+        int notifId = int.parse(service.rid);
         String notifTitle = "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')} to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName}";
         String notifBody = "";
 
@@ -57,7 +59,8 @@ void callbackDispatcher() {
         if (updated == null) {
           // Notify the user if we were unable to update the information
           sendNotification(notifId, notifTitle, "Unable to get updated information.");
-          continue;
+          // If we couldn't get information for this service, we probably can't get it for any services
+          break;
         } else {
           // If we got updated information, store it for later use
           savedServicesBox.put(updated.rid, updated);
@@ -127,7 +130,10 @@ void callbackDispatcher() {
             notifId,
             notifTitle,
             notifBody,
-            action: AndroidNotificationAction(service.rid, "More Information", showsUserInterface: true),
+            actions: [
+              AndroidNotificationAction("show${service.rid}", "More Information", showsUserInterface: true),
+              AndroidNotificationAction("stop${service.rid}", "Stop Updates", showsUserInterface: false),
+            ],
           );
         }
       }

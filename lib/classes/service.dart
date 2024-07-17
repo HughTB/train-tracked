@@ -36,6 +36,8 @@ class Service {
   late List<StoppingPoint> stoppingPoints = [];
   @HiveField(14)
   bool? cancelledHere;
+  @HiveField(15)
+  bool? getUpdates = true;
 
   Service();
 

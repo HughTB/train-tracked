@@ -33,27 +33,36 @@ Future<void> getNotificationsPermission() async {
   await notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestExactAlarmsPermission();
 }
 
-void sendNotification(int id, String title, String body, {AndroidNotificationAction? action}) {
+void sendNotification(int id, String title, String body, {List<AndroidNotificationAction>? actions}) {
   AndroidNotificationDetails androidNotifDetails = AndroidNotificationDetails(
     'trainUpdates',
     'Train Updates',
     importance: Importance.high,
     priority: Priority.high,
-    actions: (action != null) ? [action] : null,
+    actions: actions,
   );
   NotificationDetails notifDetails = NotificationDetails(android: androidNotifDetails);
   notifications.show(id, title, body, notifDetails);
 }
 
 void _onReceiveNotificationResponse(NotificationResponse response) async {
-  // Prefer the actionId, otherwise reassemble the first 4 digits of the RID from the date
-  final rid = response.actionId ?? "${DateTime.now().format("Ymd")}${response.id}";
+  final action = response.actionId?.substring(0,4);
+  final rid = (response.actionId?.substring(3)) ?? response.id.toString();
 
-  Service? service = await getServiceDetails(rid, null);
-
-  if (service != null) {
-    navigatorKey.currentState?.push(MaterialPageRoute(
-      builder: (context) => ServiceViewPage(service: service, oldService: true), // Report oldService so we don't make the same request twice
-    ));
+  switch (action) {
+    case "stop":
+      Service? service = savedServicesBox.get(rid);
+      service?.getUpdates = false;
+      savedServicesBox.put(service?.rid, service);
+      break;
+    case null:
+    case "show":
+      Service? service = savedServicesBox.get(rid);
+      if (service != null) {
+        navigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => ServiceViewPage(service: service, oldService: false)));
+      }
+      break;
+    default:
+      return;
   }
 }
