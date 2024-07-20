@@ -48,6 +48,16 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
                 },
               ),
               IconButton(
+                icon: (service.getUpdates == false) ? const Icon(Icons.notifications_off) : const Icon(Icons.notifications),
+                tooltip: 'Toggle Notifications',
+                onPressed: () async {
+                  setState(() {
+                    service.getUpdates = (service.getUpdates == false) ? true : false;
+                    savedServicesBox.put(service.rid, service);
+                  });
+                }
+              ),
+              IconButton(
                 icon: (savedServicesBox.get(service.rid) != null) ? const Icon(Icons.save) : const Icon(Icons.save_outlined),
                 tooltip: 'Save Service',
                 onPressed: () async {

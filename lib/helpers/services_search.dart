@@ -133,7 +133,9 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   List<Widget> widgets = [];
 
   if (updateServiceDetails == true) {
+    bool? getUpdates = service?.getUpdates;
     service = await getServiceDetails(service!.rid, ScaffoldMessenger.of(context));
+    service?.getUpdates = getUpdates;
   }
 
   if (service == null) {
@@ -234,9 +236,14 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "${getStationByCrs(stations, stoppingPoint.crs)?.stationName}",
-              style: Theme.of(context).textTheme.bodyLarge,
+            Text.rich(
+                TextSpan(
+                    text: "${getStationByCrs(stations, stoppingPoint.crs)?.stationName}",
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                      decoration: (cancelled) ? TextDecoration.lineThrough : null,
+                    ),
+                ),
             ),
             Text(
               "Platform ${(stoppingPoint.platform != null) ? stoppingPoint.platform : "tbc"}",
@@ -292,6 +299,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
+            Icon((service.getUpdates == false) ? Icons.notifications_off : null),
             const Icon(Icons.arrow_right_sharp),
           ],
         ),

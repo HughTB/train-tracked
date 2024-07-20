@@ -49,7 +49,7 @@ void callbackDispatcher() {
         if (DateTime.tryParse(service.stoppingPoints.last.ata!)?.isBefore(DateTime.now()) ?? false) { continue; }
 
         // Only do this parsing once
-        int notifId = int.parse(service.rid);
+        int notifId = int.parse(service.rid.substring(8));
         String notifTitle = "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')} to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName}";
         String notifBody = "";
 
@@ -132,7 +132,7 @@ void callbackDispatcher() {
             notifBody,
             actions: [
               AndroidNotificationAction("show${service.rid}", "More Information", showsUserInterface: true),
-              AndroidNotificationAction("stop${service.rid}", "Stop Updates", showsUserInterface: false),
+              AndroidNotificationAction("stop${service.rid}", "Stop Updates", showsUserInterface: true),
             ],
           );
         }

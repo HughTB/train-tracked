@@ -1,8 +1,10 @@
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:train_tracked/api/api.dart';
 import 'package:train_tracked/pages/service_view.dart';
+import 'package:train_tracked/pages/home.dart';
 
 import '../classes/service.dart';
 import '../main.dart';
@@ -46,14 +48,17 @@ void sendNotification(int id, String title, String body, {List<AndroidNotificati
 }
 
 void _onReceiveNotificationResponse(NotificationResponse response) async {
-  final action = response.actionId?.substring(0,4);
-  final rid = (response.actionId?.substring(3)) ?? response.id.toString();
+  final action = response.actionId?.substring(0, 4);
+  final rid = (response.actionId?.substring(4)) ?? "${DateTime.now().format("Ymd")}${response.id.toString()}";
 
   switch (action) {
     case "stop":
       Service? service = savedServicesBox.get(rid);
+      if (service == null) {print("nope");}
+      else {print(service.rid);}
       service?.getUpdates = false;
-      savedServicesBox.put(service?.rid, service);
+      await savedServicesBox.put(service?.rid, service);
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const HomePage(title: "Home")));
       break;
     case null:
     case "show":
