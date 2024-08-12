@@ -92,7 +92,7 @@ void callbackDispatcher() {
               if (delayedMins == 0) {
                 notifBody = "Now running on time at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
               } else {
-                notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+                notifBody = "Delayed by $delayedMins minute${delayedMins == 1 ? '' : 's'} at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
               }
 
               break;
@@ -102,7 +102,7 @@ void callbackDispatcher() {
               if (delayedMins == 0) {
                 notifBody = "Now running on time at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
               } else {
-                notifBody = "Delayed by $delayedMins minutes at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
+                notifBody = "Delayed by $delayedMins minute${delayedMins == 1 ? '' : 's'} at ${getStationByCrs(stations, updatedSP.crs)?.stationName}.";
               }
 
               break;

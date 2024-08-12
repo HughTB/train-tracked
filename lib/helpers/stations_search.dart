@@ -136,12 +136,30 @@ List<Widget> getSavedStationsWidgets(Station? home, List<Station?> stations, Fun
       )
     ));
   } else {
-    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, disruption: (disruptions?[home.crs]?.lastOrNull), isHome: true));
+    // widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, disruption: (disruptions?[home.crs]?.lastOrNull), isHome: true));
+    Disruption? worst;
+    for (Disruption dis in (disruptions?[home.crs] ?? [])) {
+      // I am aware this is horrible but I don't want to refactor the class right now
+      // TODO: Refactor Disruption.dart, using an enumeration for the severity
+      if (worst == null || dis.severity == "Severe" || dis.severity == "Major" || (dis.severity == "Minor" && worst.severity == "Normal")) {
+        worst = dis;
+      }
+    }
+
+    widgets.add(getStationWidget(home, stations.length == 1, setStateCallback, context, disruption: worst, isHome: true));
   }
 
   for (int i = 0; i < stations.length; i++) {
     if (stations[i] != home && stations[i] != null) {
-      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, disruption: (disruptions?[stations[i]?.crs!]?.lastOrNull)));
+      // widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, disruption: (disruptions?[stations[i]?.crs!]?.lastOrNull)));
+      Disruption? worst;
+      for (Disruption dis in (disruptions?[stations[i]?.crs!] ?? [])) {
+        if (worst == null || dis.severity == "Severe" || dis.severity == "Major" || (dis.severity == "Minor" && worst.severity == "Normal")) {
+          worst = dis;
+        }
+      }
+
+      widgets.add(getStationWidget(stations[i]!, i == (stations.length - ((home == null) ? 1 : 2)), setStateCallback, context, disruption: worst));
     }
   }
 
@@ -155,7 +173,7 @@ Future<List<Widget>> getSavedStationsDisruptions(Station? home, List<Station?> s
 
   late Map<String, List<Disruption>>? disruptions;
 
-  if (crsList.isNotEmpty) { disruptions = await getDisruptions(crsList, ScaffoldMessenger.of(context)); }
+  if (crsList.isNotEmpty) { disruptions = await getStationDisruptions(crsList, ScaffoldMessenger.of(context)); }
   else { disruptions = null; }
 
   return getSavedStationsWidgets(home, stations, setStateCallback, context, disruptions: disruptions);
@@ -216,7 +234,7 @@ String getDisruptionPrefix(Disruption? disruption, BuildContext context) {
 Future<List<Widget>> getDisruptionWidget(String? crs, Function() setStateCallback, BuildContext context) async {
   if (crs == null) { return []; }
 
-  Map<String, List<Disruption>>? disruptions = await getDisruptions([crs], ScaffoldMessenger.of(context));
+  Map<String, List<Disruption>>? disruptions = await getStationDisruptions([crs], ScaffoldMessenger.of(context));
 
   if (disruptions != null && (disruptions[crs]?.isNotEmpty ?? false)) {
     List<Widget> cards = [];

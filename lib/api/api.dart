@@ -135,7 +135,7 @@ Future<List<Service>?> getArrivals(String crs, ScaffoldMessengerState? messenger
   return null;
 }
 
-Future<Map<String, List<Disruption>>?> getDisruptions(List<String> crsList, ScaffoldMessengerState? messenger) async {
+Future<Map<String, List<Disruption>>?> getStationDisruptions(List<String> crsList, ScaffoldMessengerState? messenger) async {
   try {
     String crsListString = "";
     for (int i = 0; i < crsList.length; i++) {
@@ -153,9 +153,6 @@ Future<Map<String, List<Disruption>>?> getDisruptions(List<String> crsList, Scaf
       Map<String, List<Disruption>>? disruptions = {};
       final result = jsonDecode(response.body)['disruptions'];
 
-      // for (String crs in crsList) {
-      //   disruptions[crs] = result[crs].map((Map<String, dynamic> input) => Disruption.fromJson(input));
-      // }
       for (String crs in crsList) {
         List<Disruption> thisDisruptions = [];
 

@@ -260,14 +260,11 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
   return widgets;
 }
 
-Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool last, Function() callback, BuildContext context) async {
+Future<Widget?> getSavedServiceWidget(Service? service, bool oldService, bool last, Function() callback, BuildContext context) async {
   // If the service cannot be found, ignore it
   if (service == null) { return null; }
-
-  // If the service finished more than 24 hours ago, ignore it if oldServices is false
-  bool? thisServiceIsOld = DateTime.tryParse(service.stoppingPoints.last.ata!)?.isBefore(DateTime.now()) ?? false;
-  if (thisServiceIsOld != oldServices) { return null; }
-  if (thisServiceIsOld == false) {
+  // If the service is not old, try to update it
+  if (oldService == false) {
     service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context));
   }
 
@@ -307,7 +304,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
     ),
     onTap: () {
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => ServiceViewPage(service: service!, oldService: thisServiceIsOld),
+        builder: (context) => ServiceViewPage(service: service!, oldService: oldService),
       )).then((_) => callback());
     },
   );
@@ -315,12 +312,25 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldServices, bool l
 
 Future<List<Widget>> getSavedServices(bool oldServices, Function() setStateCallback, BuildContext context) async {
   List<Widget> widgets = [];
+  List<Service?> services = savedServicesBox.values.toList();
+  services.sort((a,b) => (b?.rid.compareTo(a?.rid ?? "")) ?? 0);
+
+  List<Service?> old = [];
+  List<Service?> current = [];
 
   for (int i = 0; i < savedServicesBox.length; i++) {
-    String rid = savedServicesBox.keys.toList()[i];
+    if (isServiceOld(services[i])) {
+      old.add(services[i]);
+    } else {
+      current.add(services[i]);
+    }
+  }
 
-    if (savedServicesBox.get(rid) != null) {
-      Widget? serviceWidget = await getSavedServiceWidget(savedServicesBox.get(rid), oldServices, i == (savedServicesBox.length - 1), setStateCallback, context);
+  int i = 0;
+  for (Service? service in (oldServices ? old : current)) {
+    i++;
+    if (service != null) {
+      Widget? serviceWidget = await getSavedServiceWidget(service, oldServices, i == (oldServices ? old.length : current.length), setStateCallback, context);
 
       if (serviceWidget != null) {
         widgets.add(serviceWidget);
@@ -338,4 +348,9 @@ Future<List<Widget>> getSavedServices(bool oldServices, Function() setStateCallb
   }
 
   return widgets;
+}
+
+// Returns true if the ATA of the final stopping point is before now
+bool isServiceOld(Service? service) {
+  return DateTime.tryParse(service?.stoppingPoints.last.ata! ?? "")?.isBefore(DateTime.now()) ?? false;
 }
