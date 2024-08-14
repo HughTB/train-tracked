@@ -54,7 +54,7 @@ void callbackDispatcher() {
         String notifBody = "";
 
         // Update the service, if possible
-        Service? updated = await getServiceDetails(service.rid, null);
+        Service? updated = await getServiceDetails(service.rid, null, getUpdates: service.getUpdates);
 
         if (updated == null) {
           // Notify the user if we were unable to update the information

@@ -12,7 +12,7 @@ import '../classes/disruption.dart';
 // const String apiToken = "";
 import 'api_settings.dart';
 
-Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger) async {
+Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger, {bool? getUpdates = true}) async {
   try {
     final response = await http.get(
       Uri.parse("$apiEndpoint/details?rid=$rid"),
@@ -22,7 +22,9 @@ Future<Service?> getServiceDetails(String rid, ScaffoldMessengerState? messenger
     );
 
     if (response.statusCode == 200) {
-      return Service.fromJson(jsonDecode(response.body)['services']);
+      Service service = Service.fromJson(jsonDecode(response.body)['services']);
+      service.getUpdates = getUpdates;
+      return service;
     } else {
       messenger?.showSnackBar(
           SnackBar(

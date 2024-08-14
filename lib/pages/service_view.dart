@@ -52,7 +52,7 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
                       },
                     ),
                     IconButton(
-                        icon: (service.getUpdates == false) ? const Icon(Icons.notifications_off) : const Icon(Icons.notifications),
+                        icon: (savedServicesBox.get(service.rid)?.getUpdates == false) ? const Icon(Icons.notifications_off) : const Icon(Icons.notifications),
                         tooltip: 'Toggle Notifications',
                         onPressed: () async {
                           setState(() {
@@ -66,7 +66,7 @@ class _ServiceViewPageState extends State<ServiceViewPage> {
                         tooltip: 'Save Service',
                         onPressed: () async {
                           if (savedServicesBox.get(service.rid) == null) {
-                            service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context)) ?? service;
+                            service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context), getUpdates: service.getUpdates) ?? service;
                           }
                           setState(() {
                             if (savedServicesBox.get(service.rid) != null) {

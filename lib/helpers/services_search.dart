@@ -141,7 +141,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
 
   if (updateServiceDetails == true) {
     bool? getUpdates = service?.getUpdates;
-    service = await getServiceDetails(service!.rid, ScaffoldMessenger.of(context));
+    service = await getServiceDetails(service!.rid, ScaffoldMessenger.of(context), getUpdates: service.getUpdates);
     service?.getUpdates = getUpdates;
   }
 
@@ -272,7 +272,7 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldService, bool la
   if (service == null) { return null; }
   // If the service is not old, try to update it
   if (oldService == false) {
-    service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context));
+    service = await getServiceDetails(service.rid, ScaffoldMessenger.of(context), getUpdates: service.getUpdates);
   }
 
   // If the service can no longer be found, ignore it
