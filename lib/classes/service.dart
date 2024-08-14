@@ -38,6 +38,14 @@ class Service {
   bool? cancelledHere;
   @HiveField(15)
   bool? getUpdates = true;
+  @HiveField(16)
+  String? delayReason;
+  @HiveField(17)
+  String? cancelReason;
+  @HiveField(18)
+  int? numCoaches;
+  @HiveField(19)
+  int? loadingPercentage;
 
   Service();
 
@@ -65,5 +73,10 @@ class Service {
     }
 
     cancelledHere = json['cancelled'];
+    delayReason = json['delayReason'];
+    cancelReason = json['cancelReason'];
+
+    numCoaches = json['numCoaches'];
+    loadingPercentage = json['loadingPercentage'];
   }
 }

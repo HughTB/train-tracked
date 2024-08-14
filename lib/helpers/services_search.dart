@@ -42,7 +42,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback
             child: Row(
               children: [
                 SizedBox(
-                  height: 70,
+                  height: 75,
                   width: 10,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -62,10 +62,17 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          service.operator, // Add number of coaches here
+                          service.operator,
                           style: Theme.of(context).textTheme.bodySmall,
                         )
-                      ],
+                      ] + (
+                        (service.numCoaches != null) ? [
+                          Text(
+                            "${service.numCoaches.toString()} Coaches",
+                            style: Theme.of(context).textTheme.bodySmall
+                          )
+                        ] : []
+                      ),
                     ),
                   ),
                 ),
@@ -355,17 +362,22 @@ bool isServiceOld(Service? service) {
   return DateTime.tryParse(service?.stoppingPoints.last.ata! ?? "")?.isBefore(DateTime.now()) ?? false;
 }
 
-Widget? getDisruptionCard(Service? service, BuildContext context) {
+Future<Widget?> getDisruptionCard(Service? service, BuildContext context) async {
+  if (service == null) { return null; }
+  if (service.delayReason == null && service.cancelReason == null) { return null; }
+
+  List<String>? disruptionTexts = await getDisruptionText((service.cancelReason != null) ? service.cancelReason! : service.delayReason!, ScaffoldMessenger.of(context));
+
   return Card(
     child: Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
-        children:[
+        children: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Icon(
               Icons.warning_sharp,
-              color: (delayedColour), // Logic to change between cancelled or delayed
+              color: (service.cancelReason != null) ? cancelledColour : delayedColour,
             ),
           ),
           Expanded(
@@ -373,14 +385,14 @@ Widget? getDisruptionCard(Service? service, BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Info about service:",
+                  (service.cancelReason != null) ? "Service (partially) cancelled" : "Service delayed",
                   style: TextStyle(
                     fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                    color: (delayedColour), // Logic to change between cancelled or delayed
+                    color: (service.cancelReason != null) ? cancelledColour : delayedColour,
                   ),
                 ),
                 Text(
-                  "This train has been delayed by attempted theft of signalling cables yesterday"
+                  "${(service.cancelReason != null) ? (disruptionTexts?[1]) : (disruptionTexts?[0])}",
                 )
               ],
             ),

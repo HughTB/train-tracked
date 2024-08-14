@@ -189,3 +189,42 @@ Future<Map<String, List<Disruption>>?> getStationDisruptions(List<String> crsLis
 
   return null;
 }
+
+Future<List<String>?> getDisruptionText(String disruptionCode, ScaffoldMessengerState? messenger) async {
+  try {
+    final response = await http.get(
+        Uri.parse("$apiEndpoint/disruption-code?reason=$disruptionCode"),
+        headers: {
+          "x-api-key": apiToken,
+        }
+    );
+
+    if (response.statusCode == 200) {
+      dynamic json = jsonDecode(response.body);
+
+      return [json['result']?['delayText'], json['result']?['cancelText']];
+    } else {
+      messenger?.showSnackBar(
+          SnackBar(
+            content: Text("${response.statusCode}: ${response.reasonPhrase}"),
+          )
+      );
+    }
+  } on SocketException catch (e) {
+    log(e.toString());
+    messenger?.showSnackBar(
+        const SnackBar(
+          content: Text("Error: Unable to reach the Train Tracked API. Are you connected to the internet?"),
+        )
+    );
+  } on Exception catch (e) {
+    log(e.toString());
+    messenger?.showSnackBar(
+        SnackBar(
+          content: Text("Error: ${e.toString().replaceAll(apiToken, '{apiToken}')}"),
+        )
+    );
+  }
+
+  return null;
+}

@@ -32,13 +32,17 @@ class ServiceAdapter extends TypeAdapter<Service> {
       ..destination = (fields[12] as List).cast<String>()
       ..stoppingPoints = (fields[13] as List).cast<StoppingPoint>()
       ..cancelledHere = fields[14] as bool?
-      ..getUpdates = fields[15] as bool?;
+      ..getUpdates = fields[15] as bool?
+      ..delayReason = fields[16] as String?
+      ..cancelReason = fields[17] as String?
+      ..numCoaches = fields[18] as int?
+      ..loadingPercentage = fields[19] as int?;
   }
 
   @override
   void write(BinaryWriter writer, Service obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.rid)
       ..writeByte(1)
@@ -70,7 +74,15 @@ class ServiceAdapter extends TypeAdapter<Service> {
       ..writeByte(14)
       ..write(obj.cancelledHere)
       ..writeByte(15)
-      ..write(obj.getUpdates);
+      ..write(obj.getUpdates)
+      ..writeByte(16)
+      ..write(obj.delayReason)
+      ..writeByte(17)
+      ..write(obj.cancelReason)
+      ..writeByte(18)
+      ..write(obj.numCoaches)
+      ..writeByte(19)
+      ..write(obj.loadingPercentage);
   }
 
   @override
