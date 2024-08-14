@@ -47,14 +47,14 @@ class _ArrDepPageState extends State<ArrDepPage> {
             height: 200,
             alignment: Alignment.center,
             child: SpinKitFoldingCube(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           )],
           <Widget>[Container(
             height: 200,
             alignment: Alignment.center,
             child: SpinKitFoldingCube(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           )],
           const <Widget>[],

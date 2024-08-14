@@ -62,7 +62,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          service.operator,
+                          service.operator, // Add number of coaches here
                           style: Theme.of(context).textTheme.bodySmall,
                         )
                       ],
@@ -353,4 +353,40 @@ Future<List<Widget>> getSavedServices(bool oldServices, Function() setStateCallb
 // Returns true if the ATA of the final stopping point is before now
 bool isServiceOld(Service? service) {
   return DateTime.tryParse(service?.stoppingPoints.last.ata! ?? "")?.isBefore(DateTime.now()) ?? false;
+}
+
+Widget? getDisruptionCard(Service? service, BuildContext context) {
+  return Card(
+    child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children:[
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(
+              Icons.warning_sharp,
+              color: (delayedColour), // Logic to change between cancelled or delayed
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Info about service:",
+                  style: TextStyle(
+                    fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                    color: (delayedColour), // Logic to change between cancelled or delayed
+                  ),
+                ),
+                Text(
+                  "This train has been delayed by attempted theft of signalling cables yesterday"
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
