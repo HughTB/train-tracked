@@ -68,7 +68,7 @@ Future<List<Widget>> getLiveCards(String crs, bool arrivals, Function() callback
                       ] + (
                         (service.numCoaches != null) ? [
                           Text(
-                            "${service.numCoaches.toString()} Coaches",
+                            "${service.numCoaches.toString()} Coach${service.numCoaches == 1 ? "" : "es"}",
                             style: Theme.of(context).textTheme.bodySmall
                           )
                         ] : []
@@ -296,10 +296,10 @@ Future<Widget?> getSavedServiceWidget(Service? service, bool oldService, bool la
             Expanded(
               child: Text(
                 "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('d/m/Y')} - "
-                    "     ${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')} "
-                    "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
-                    "to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName} "
-                    "(${DateTime.tryParse(service.stoppingPoints.last.sta!)?.format('H:i')})",
+                "${DateTime.tryParse(service.stoppingPoints.first.std!)?.format('H:i')} "
+                "${getStationByCrs(stations, service.stoppingPoints.first.crs)?.stationName} "
+                "to ${getStationByCrs(stations, service.stoppingPoints.last.crs)?.stationName} "
+                "(${DateTime.tryParse(service.stoppingPoints.last.sta!)?.format('H:i')})",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
