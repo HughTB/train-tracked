@@ -9,8 +9,15 @@ class StyleData {
       primary: Color(0xFF8635E3),
       secondary: Color(0xFFA76CEB),
     ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFFDCDCDC),
+    ),
     navigationBarTheme: const NavigationBarThemeData(
       indicatorColor: Color(0xFF8635E3),
+      backgroundColor: Color(0xFFDCDCDC),
+    ),
+    cardTheme: const CardTheme(
+      color: Color(0xFFDCDCDC),
     ),
   );
 
@@ -32,9 +39,13 @@ class StyleData {
     ),
     navigationBarTheme: const NavigationBarThemeData(
       indicatorColor: Color(0xFF8635E3),
+      backgroundColor: Color(0xFF313131),
     ),
     tabBarTheme: const TabBarTheme(
       labelColor: Color(0xFFFFFFFF),
     ),
+    cardTheme: const CardTheme(
+      color: Color(0xFF313131),
+    )
   );
 }

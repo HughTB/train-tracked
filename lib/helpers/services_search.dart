@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:date_time_format/date_time_format.dart';
 
@@ -151,18 +153,34 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
 
   int i = 0;
   int last = service.stoppingPoints.length - 1;
+  bool afterPrevious = true;
+  DateTime now = DateTime.now();
+  int location = 0;
+  bool atLocation = false;
 
   for (StoppingPoint stoppingPoint in service.stoppingPoints) {
     bool delayedArrival = (stoppingPoint.sta?.substring(0, 16) != stoppingPoint.ata?.substring(0, 16) && stoppingPoint.ata != null);
     bool delayedDeparture = (stoppingPoint.std?.substring(0, 16) != stoppingPoint.atd?.substring(0, 16) && stoppingPoint.atd != null);
     bool cancelled = stoppingPoint.cancelledHere ?? false;
+
+    final sta = DateTime.tryParse(stoppingPoint.sta ?? "");
+    final std = DateTime.tryParse(stoppingPoint.std ?? "");
+    final ata = DateTime.tryParse(stoppingPoint.ata ?? "");
+    final atd = DateTime.tryParse(stoppingPoint.atd ?? "");
+
+    int? dwellTime = (sta != null && std != null) ? std.difference(sta).inMinutes : null;
+
+    bool atStation = (ata != null && atd != null) ? now.isAfter(ata) && now.isBefore(atd) : (ata == null && atd != null) ? now.isBefore(atd) : false;
+    bool beforeHere = (ata != null) ? now.isBefore(ata) : false;
+
+    if (atStation || (beforeHere && afterPrevious)) { location = i; atLocation = atStation; }
     
     widgets.add(Row(
       children: [
         Stack(
-          children: [
+          children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: (i == 0) ? 25 : 0, bottom: (i == last) ? 25 : 0),
+              padding: EdgeInsets.only(top: (i == 0) ? 25 : 0, bottom: (i == last) ? 25 : 0, left: 14),
               child: Container(
                 width: 2,
                 height: (i == 0 || i == last) ? 25 : 50,
@@ -170,9 +188,9 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 25),
+              padding: const EdgeInsets.only(top: 25, left: 14),
               child: Container(
-                width: 10,
+                width: 14,
                 height: 2,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
@@ -182,12 +200,12 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: SizedBox(
-            width: 70,
+            width: 80,
             child: (i == last) ? Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
-                    text: DateTime.tryParse(stoppingPoint.sta!)?.format('H:i'),
+                    text: sta?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
                       decoration: (delayedArrival || cancelled) ? TextDecoration.lineThrough : null,
@@ -202,7 +220,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
                   ),
                 ] : (delayedArrival) ? [
                   TextSpan(
-                    text: "\n${DateTime.tryParse(stoppingPoint.ata!)?.format('H:i')}",
+                    text: "\n${ata?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedArrival) ? delayedColour : Theme.of(context).canvasColor,
                     ),
@@ -214,7 +232,7 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
               TextSpan(
                 children: [
                   TextSpan(
-                    text: DateTime.tryParse(stoppingPoint.std!)?.format('H:i'),
+                    text: std?.format('H:i'),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyMedium?.color,
                       decoration: (delayedDeparture || cancelled) ? TextDecoration.lineThrough : null,
@@ -227,14 +245,17 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
                       color: (cancelled) ? cancelledColour : Theme.of(context).canvasColor,
                     ),
                   ),
-                ] : (delayedDeparture) ? [
+                ] : ((delayedDeparture) ? [
                   TextSpan(
-                    text: "\n${DateTime.tryParse(stoppingPoint.atd!)?.format('H:i')}",
+                    text: "\n${atd?.format('H:i')}",
                     style: TextStyle(
                       color: (delayedDeparture) ? delayedColour : Theme.of(context).canvasColor,
                     ),
                   ),
-                ] : []),
+                ] : (dwellTime != null && dwellTime > 2) ? [TextSpan(
+                  text: "\nWaits $dwellTime mins",
+                  style: Theme.of(context).textTheme.bodySmall,
+                )] : [])),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
@@ -261,10 +282,35 @@ Future<List<Widget>> getServiceView(BuildContext context, Service? service, bool
       ],
     ));
 
+    afterPrevious = (atd != null) ? now.isAfter(atd) : false;
     i++;
   }
 
-  return widgets;
+  double offset = max(10 + location * 50 + ((atLocation) ? 0 : -25), 10);
+
+  // return widgets;
+  return [Stack(
+    children: [
+      Column(
+        children: widgets,
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: offset),
+        child: (!isServiceOld(service)) ? DecoratedBox(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            shape: BoxShape.circle,
+          ),
+          position: DecorationPosition.background,
+          child: SizedBox(
+            width: 30,
+            height: 30,
+            child: Icon(Icons.train, color: Theme.of(context).colorScheme.onPrimary),
+          ),
+        ) : null,
+      ),
+    ],
+  )];
 }
 
 Future<Widget?> getSavedServiceWidget(Service? service, bool oldService, bool last, Function() callback, BuildContext context) async {
